@@ -1,0 +1,30 @@
+{
+"vms" :
+  [
+    {
+        "type":"2nic-no-DXC",
+        "name":"H2-HPE-s1-129",
+        "autopower":"yes",
+        "template":"NextGenTestingVM_CL1_2nic_no_DXC",
+        "resource-pool":"ComputeCluster1_script_VMs_pool",
+        "nuage-enterprise":"HelloWorld2",
+        "nuage-user":"phavrila",
+        "nuage-nics": [
+          {
+            "name":"nic0",
+            "domain":"HPE managed",
+            "zone":"private1",
+            "subnet":"subnet1",
+            "ip-type":"auto",
+            "ip":"0.0.0.0"
+          }
+        ],
+        "ixia-address":"29.203.248.129",
+        "ixia-netmask":"255.255.255.0",
+        "ixia-gateway":"29.203.248.1",
+        "ixia-dns1":"15.163.248.60",
+        "ixia-dns2":"15.163.248.61",
+        "ixia-nic-domain":"ng1labpln.mcloud.entsvcs.net"
+    }
+  ]
+}
