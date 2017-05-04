@@ -16,6 +16,9 @@ def ixchariot_load_json(args):
             print("")
             print("TEST: " + test['name'])
             print("    type:" + test['type'])
+            if test.get('optional-star-centers',None) is not None:
+                for star in test['optional-star-centers']:
+                    print("    star node:" + star)
             print("    endpoint-types:" + test['endpoint-types'])
             print("    delete session at the end?:" + test['delete-session-at-end'])
             print("    generate stats zip?:" + test['generate-stats-zip'])
@@ -46,8 +49,10 @@ def ixchariot_load_json(args):
     ixchariot.connect()
     
     for test in data['tests']:
-        if test['type'] == 'connectivity-mesh' and test['endpoint-types'] == 'explicit':
-            ixchariot.connectivity_mesh_test(test['name'],test['test-duration'],test['delete-session-at-end'],test['autostart'],test['endpoints'],test['generate-stats-zip'])
+        if test['type'] == 'connectivity-test' and test['endpoint-types'] == 'explicit':
+            ixchariot.connectivity_test(test['name'],test['test-duration'],test['delete-session-at-end'],test['autostart'],test['endpoints'],test['generate-stats-zip'],test.get('optional-star-centers',None))
+        
+            
             
  
     

@@ -215,9 +215,12 @@ class vmware_pyvmomi_wrapper(object):
                                 name,
                                 nuage_enterprise,
                                 nuage_user,
+                                production_nic_name,
                                 production_nic_domain,
                                 production_nic_zone,
                                 production_nic_subnet,
+                                production_nic_ip_type,
+                                production_nic_ip,                                
                                 dxc_nic_domain,
                                 dxc_nic_zone,
                                 dxc_nic_subnet,
@@ -240,10 +243,13 @@ class vmware_pyvmomi_wrapper(object):
         print("Nuage parameters:")
         print("nuage enterprise: " + nuage_enterprise)
         print("nuage user: " + nuage_user)
-        print("nuage production NIC#1:")
-        print("- domain: " + production_nic_domain)
-        print("- zone  : " + production_nic_zone)
-        print("- subnet: " + production_nic_subnet)
+        print("nuage production:")
+        print("- name: "    + production_nic_name)
+        print("- domain: "  + production_nic_domain)
+        print("- zone  : "  + production_nic_zone)
+        print("- subnet: "  + production_nic_subnet)
+        print("- ip-type: " + production_nic_ip_type)
+        print("- ip: "      + production_nic_ip)
         print("nuage dxc NIC#2:")
         print("- domain: " + dxc_nic_domain)
         print("- zone  : " + dxc_nic_zone)
@@ -349,15 +355,19 @@ class vmware_pyvmomi_wrapper(object):
         # User
         vm_option_values.append(vim.option.OptionValue(key='nuage.user', value=nuage_user))
         
-        print('Setting Nuage Metadata for NIC0 - production')        
+        print('Setting Nuage Metadata for name: ' +production_nic_name+  ' - production')        
         # Domain
-        vm_option_values.append(vim.option.OptionValue(key='nuage.nic0.domain', value=production_nic_domain))
+        vm_option_values.append(vim.option.OptionValue(key='nuage.' +production_nic_name+ '.domain', value=production_nic_domain))
         # Zone
-        vm_option_values.append(vim.option.OptionValue(key='nuage.nic0.zone', value=production_nic_zone))
+        vm_option_values.append(vim.option.OptionValue(key='nuage.' +production_nic_name+ '.zone', value=production_nic_zone))
         # Subnet
-        vm_option_values.append(vim.option.OptionValue(key='nuage.nic0.network', value=production_nic_subnet))
+        vm_option_values.append(vim.option.OptionValue(key='nuage.' +production_nic_name+ '.network', value=production_nic_subnet))
         # Network type
-        vm_option_values.append(vim.option.OptionValue(key='nuage.nic0.networktype', value='ipv4'))
+        vm_option_values.append(vim.option.OptionValue(key='nuage.' +production_nic_name+ '.networktype', value='ipv4'))
+        
+        if production_nic_ip_type == 'static':
+            vm_option_values.append(vim.option.OptionValue(key='nuage.' +production_nic_name+ '.ip', value=production_nic_ip))            
+            
         # IP
         #if vm_ip:
         #    vm_option_values.append(vim.option.OptionValue(key='nuage.nic0.ip', value=vm_ip))

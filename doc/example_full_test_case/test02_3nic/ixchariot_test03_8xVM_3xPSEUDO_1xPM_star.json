@@ -1,0 +1,120 @@
+{
+"tests" :
+  [
+      {
+            "type":"connectivity-test",
+            "optional-star-centers": [
+                "1.1.1.128","2.2.2.129"
+            ],
+            "name":"TEST01 - internal VMs + PMs connectivity test",
+            "endpoint-types":"explicit",
+            "delete-session-at-end":"no",
+            "generate-stats-zip":"no",
+            "test-duration":"10",
+            "autostart":"yes",
+            "endpoints": [
+              {
+                "type":"static",
+                "ixia-management-ip":"29.203.248.19",
+                "endpoint-ip":"3.3.3.250"
+              },
+              {
+                "type":"static",
+                "ixia-management-ip":"29.203.248.17",
+                "endpoint-ip":"2.2.2.252"
+              },
+              {
+                "type":"static",
+                "ixia-management-ip":"29.203.248.8",
+                "endpoint-ip":"3.3.3.253"
+              },
+              {
+                "type":"static",
+                "ixia-management-ip":"29.203.248.6",
+                "endpoint-ip":"3.3.3.251"
+              },
+              {
+                "type":"nuage-vm",
+                "ixia-management-ip":"29.203.248.128",
+                "endpoint-ip":"auto",
+                "nuage-vm-name": "FAST-CL1-2nic-ixia128",
+                "nuage-vm-enterprise": "AutomatedHelloWorld",
+                "nuage-vm-domain":"Instance1",
+                "nuage-vm-zone":"private1",
+                "nuage-vm-subnet":"subnet1"
+              },
+              {
+                "type":"nuage-vm",
+                "ixia-management-ip":"29.203.248.129",
+                "endpoint-ip":"auto",
+                "nuage-vm-name": "FAST-CL1-2nic-ixia129",
+                "nuage-vm-enterprise": "AutomatedHelloWorld",
+                "nuage-vm-domain":"Instance1",
+                "nuage-vm-zone":"private1",
+                "nuage-vm-subnet":"subnet2"
+              },
+              {
+                "type":"nuage-vm",
+                "ixia-management-ip":"29.203.248.130",
+                "endpoint-ip":"auto",
+                "nuage-vm-name": "FAST-CL1-2nic-ixia130",
+                "nuage-vm-enterprise": "AutomatedHelloWorld",
+                "nuage-vm-domain":"Instance1",
+                "nuage-vm-zone":"private2",
+                "nuage-vm-subnet":"subnet3"
+              },
+              {
+                "type":"nuage-vm",
+                "ixia-management-ip":"29.203.248.131",
+                "endpoint-ip":"auto",
+                "nuage-vm-name": "FAST-CL1-2nic-ixia131",
+                "nuage-vm-enterprise": "AutomatedHelloWorld",
+                "nuage-vm-domain":"Instance1",
+                "nuage-vm-zone":"private2",
+                "nuage-vm-subnet":"subnet3"
+              },
+              {
+                "type":"nuage-vm",
+                "ixia-management-ip":"29.203.248.132",
+                "endpoint-ip":"auto",
+                "nuage-vm-name": "FAST-CL1-2nic-ixia132",
+                "nuage-vm-enterprise": "AutomatedHelloWorld",
+                "nuage-vm-domain":"Instance1",
+                "nuage-vm-zone":"private1",
+                "nuage-vm-subnet":"subnet1"
+              },
+              {
+                "type":"nuage-vm",
+                "ixia-management-ip":"29.203.248.133",
+                "endpoint-ip":"auto",
+                "nuage-vm-name": "FAST-CL1-2nic-ixia133",
+                "nuage-vm-enterprise": "AutomatedHelloWorld",
+                "nuage-vm-domain":"Instance1",
+                "nuage-vm-zone":"private1",
+                "nuage-vm-subnet":"subnet2"
+              },
+              {
+                "type":"nuage-vm",
+                "ixia-management-ip":"29.203.248.134",
+                "endpoint-ip":"auto",
+                "nuage-vm-name": "FAST-CL1-2nic-ixia134",
+                "nuage-vm-enterprise": "AutomatedHelloWorld",
+                "nuage-vm-domain":"Instance1",
+                "nuage-vm-zone":"private2",
+                "nuage-vm-subnet":"subnet3"
+              },
+              {
+                "type":"nuage-vm",
+                "ixia-management-ip":"29.203.248.135",
+                "endpoint-ip":"auto",
+                "nuage-vm-name": "FAST-CL1-2nic-ixia135",
+                "nuage-vm-enterprise": "AutomatedHelloWorld",
+                "nuage-vm-domain":"Instance1",
+                "nuage-vm-zone":"private2",
+                "nuage-vm-subnet":"subnet3"
+              }
+            ]
+
+      }
+  ]
+}

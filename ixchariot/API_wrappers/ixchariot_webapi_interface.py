@@ -121,10 +121,9 @@ class ixchariot_webapi_wrapper():
             else:
                 print("FLOW: " + flow + " [min/avg/max]: " + str(results[0].values[-1].value / 1048576) + "Mbps/" + str(results[1].values[-1].value / 1048576) + "Mbps/" + str(results[2].values[-1].value / 1048576) + "Mbps ["+ str(results[0].values[-1].value) + "bps/" + str(results[1].values[-1].value) + "bps/" + str(results[2].values[-1].value) + "bps]")
         '''
-                      
-    
-    def connectivity_mesh_test(self,name,test_duration,delete_session_at_end,autostart,endpoints,stats_zip):
-        print("ENTERING basic_connectivity_test TEST RUN")
+            
+    def connectivity_test(self,name,test_duration,delete_session_at_end,autostart,endpoints,stats_zip,optional_star_centers_array):
+        print("ENTERING STAR connectivity TEST RUN")
         session = self.create_session()
         
         # FLOW NAMES 
@@ -163,6 +162,11 @@ class ixchariot_webapi_wrapper():
         ## HERE WE CREATE THE MESH
         for endpoint_SRC in endpoints:                                               
             for endpoint_DST in endpoints:
+                
+                if optional_star_centers_array is not None and endpoint_DST['endpoint-ip'] not in optional_star_centers_array and endpoint_SRC['endpoint-ip'] not in optional_star_centers_array:
+                    print("Breaking flow as optional-star-center defined, and not matched")
+                    continue
+                
                 if endpoint_DST['endpoint-ip'] != endpoint_SRC['endpoint-ip']:
                     print("=====================================")
                     print("SRC "+endpoint_SRC['type']+" ip:" + endpoint_SRC['endpoint-ip'] + "[" + endpoint_SRC["ixia-management-ip"] + "]")                    
@@ -254,6 +258,6 @@ class ixchariot_webapi_wrapper():
         if delete_session_at_end == "yes":
             session.stopSession()
             print("SESSION " +str(session.sessionId)+ " DELETION DUE json \"delete-session-at-end\":\"yes\"")
-            session.httpDelete()
+            session.httpDelete()            
 
         

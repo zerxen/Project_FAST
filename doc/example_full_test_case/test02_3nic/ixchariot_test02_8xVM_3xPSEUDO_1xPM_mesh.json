@@ -2,7 +2,7 @@
 "tests" :
   [
       {
-            "type":"connectivity-mesh",
+            "type":"connectivity-test",
             "name":"TEST01 - internal VMs + PMs connectivity test",
             "endpoint-types":"explicit",
             "delete-session-at-end":"no",

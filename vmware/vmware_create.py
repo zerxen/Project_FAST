@@ -73,9 +73,12 @@ def vmware_create(args):
                                         args.name[0], 
                                         args.nuage_enterprise[0], 
                                         args.nuage_user[0], 
+                                        "nic0", # currently only via JSON you can load IP specifically
                                         args.production_nic_domain[0], 
                                         args.production_nic_zone[0], 
-                                        args.production_nic_subnet[0], 
+                                        args.production_nic_subnet[0],
+                                        "auto", # currently only via JSON you can load IP specifically
+                                        "0.0.0.0",  # currently only via JSON you can load IP specifically
                                         args.dxc_nic_domain[0], 
                                         args.dxc_nic_zone[0], 
                                         args.dxc_nic_subnet[0], 
