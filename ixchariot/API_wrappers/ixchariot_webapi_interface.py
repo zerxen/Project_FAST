@@ -38,6 +38,91 @@ class ixchariot_webapi_wrapper():
         print "CREATED NEW TEST SESSION"
         return session
     
+    def get_session(self,session_id):        
+        try:
+            session = self.api.joinSession(int(session_id))
+        except Exception, e:
+            print("FAILED TO CONNECT TO EXISTING IXIA SESSION")
+            exit(1) 
+                       
+        print "Joined session %s" % session.sessionId
+        
+        #print "Opening the session..."
+        #session.startSession()
+        print "JOINED EXISTING TEST SESSION"
+        return session    
+    
+    def run_test(self,session_id,generate_zip):
+        print("ENTERING session TEST RUN")
+        
+        session = self.get_session(session_id)
+        result = session.startTest()
+        
+        seconds = 0
+        while session.testIsRunning:
+            time.sleep(1)
+            seconds = seconds + 1
+            print("Test is still running [" + str(seconds) + "s]")
+             
+        print("Test finished") 
+        notifications = session.getErrorNotifications()
+        
+        for notification in notifications:
+            print("[Debug] Notification: " + str(notification.message)) 
+            
+        # Get test level results.
+        # Note: the statistic names should be identical to those that appear in the results CSV
+        results = ixchariotApi.getTestLevelResults(session, ["Throughput"])    
+        print "Aggregated Total Results: \n"
+        for res in results:
+            # Each object in the list of results is of type Statistic (contains the statistic name and a list of StatisticValue objects).
+            print(res.name)
+            for val in res.values:
+                # The list will contain StatisticValue objects for all the reported timestamps since the beginning of the test.
+                # Each StatisticValue object contains the timestamp and the actual value.
+                print("time:" + str(val.timestamp) + "ms    " + str(val.value / 1048576) + "Mbps")
+            print("")
+            
+        print('Generate_zip ? == ' + str(generate_zip))
+        if generate_zip == 1:
+            #Save all results to CSV files.
+            print("SAVING RESULTS to zipped CSV files DUE json \generate-stats-zip\":\"yes\"")
+            print("Saving the test results into zipped CSV files...\n")                
+            filePath = time.strftime('%Y_%b_%d_%H_%M_%p_') + "_testResults.zip"
+            print("Saving into " + filePath)
+            with open(filePath, "wb+") as statsFile:
+                self.api.getStatsCsvZipToFile(result.testId, statsFile)                
+               
+        # Get flow level results
+        # Note: the statistic names should be identical to those that appear in the results CSV
+        
+        filterErrorMessage = "No statistics were reported for this test"
+        (valuesList, query) = ixchariotApi.getRawResults(session, ["mix","Min Throughput", "Avg Throughput","Max Throughput"], None, filterErrorMessage)
+        
+        '''
+        valuesList contains full filtered stats per timetick, so we will only use the last one
+        '''
+        results = valuesList[-1].values
+        print("Flow / Min Throughput / Avg Throughput / Max Throughput")
+        for result in results:
+            if result[1] is None or result[1] is str or result[1] == "N/A":
+                print("FLOW: " + result[0] + " - NO RESULTS - CONNECTION FAILED!")
+            else:
+                print("FLOW: " + result[0] + " [min/avg/max]: " + str(result[1] / 1048576) + "Mbps/" + str(result[2] / 1048576) + "Mbps/" + str(result[3] / 1048576) + "Mbps ["+ str(result[1]) + "bps/" + str(result[2]) + "bps/" + str(result[3]) + "bps]")            
+    
+        #import pdb; pdb.set_trace()
+        
+        '''
+        print("FLOW STATISTICS: ")
+        for flow in flow_names:
+            results = ixchariotApi.getFlowLevelResults(session, ["Min Throughput", "Avg Throughput","Max Throughput"], flow, "TCP Baseline Performance", "TCP")
+            if results[1].values[-1].value is str or results[1].values[-1].value == "N/A":
+                print("FLOW: " + flow + " - NO RESULTS - CONNECTION FAILED!")
+            else:
+                print("FLOW: " + flow + " [min/avg/max]: " + str(results[0].values[-1].value / 1048576) + "Mbps/" + str(results[1].values[-1].value / 1048576) + "Mbps/" + str(results[2].values[-1].value / 1048576) + "Mbps ["+ str(results[0].values[-1].value) + "bps/" + str(results[1].values[-1].value) + "bps/" + str(results[2].values[-1].value) + "bps]")
+        '''
+                      
+    
     def connectivity_mesh_test(self,name,test_duration,delete_session_at_end,autostart,endpoints,stats_zip):
         print("ENTERING basic_connectivity_test TEST RUN")
         session = self.create_session()
@@ -64,7 +149,14 @@ class ixchariot_webapi_wrapper():
                                                                             endpoint['nuage-vm-zone'],
                                                                             endpoint['nuage-vm-subnet'],
                                                                             endpoint['nuage-vm-name']
-                                                                            )               
+                                                                            )
+                if endpoint['endpoint-ip'] is None or endpoint['endpoint-ip'] == 'not-found': 
+                    print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+                    print("XXX   ERROR! ERROR!  ERROR!    XXX")
+                    print("XXX----------------------------XXX")
+                    print("XXX One endpoint generator     XXX")
+                    print("XXX doesn't have a correct IP! XXX")
+                    print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")                                  
                 
         iFlowID = 0;
 
@@ -75,6 +167,14 @@ class ixchariot_webapi_wrapper():
                     print("=====================================")
                     print("SRC "+endpoint_SRC['type']+" ip:" + endpoint_SRC['endpoint-ip'] + "[" + endpoint_SRC["ixia-management-ip"] + "]")                    
                     print("DST "+endpoint_DST['type']+" ip:" + endpoint_DST['endpoint-ip'] + "[" + endpoint_DST["ixia-management-ip"] + "]") 
+                    
+                    if endpoint_SRC['endpoint-ip'] == 'not-found' or endpoint_DST['endpoint-ip'] == 'not-found':
+                        print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+                        print("XXX   ERROR! ERROR!  ERROR!    XXX")
+                        print("XXX----------------------------XXX")
+                        print("XXX One endpoint generator     XXX")
+                        print("XXX doesn't have a correct IP! XXX")
+                        print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
                     
                     '''
                     CREATION OF FLOW DEFINITION FOR THIS COMBINATION
@@ -123,8 +223,8 @@ class ixchariot_webapi_wrapper():
                         destinationQoSName = flowData[4]
                         flowScript = ixchariotApi.getFlowScriptFromResourcesLibrary(session, flowName)
                     
-                        # THIS IS NECESSARY TO WORK WITH VTEPS
-                        ixchariotApi.changeFlowScriptParameterValue(flowScript, "MSS", "1410")
+                        # TH   IS IS NECESSARY TO WORK WITH VTEPS
+                        #ixchariotApi.changeFlowScriptParameterValue(flowScript, "MSS", "1410")
                         # Example for changing the parameter values
                         #if i == 3:
                         #    ixchariotApi.changeFlowScriptParameterValue(flowScript, "Bit Rate", "9.8 Mbps")
@@ -144,91 +244,13 @@ class ixchariot_webapi_wrapper():
             
             print("")
             print("EXECUTING TEST VIA json AUTOSTART=\"yes\"")
-
-            result = session.startTest()
-            
-            seconds = 0
-            while session.testIsRunning:
-                time.sleep(1)
-                seconds = seconds + 1
-                print("Test is still running [" + str(seconds) + "s]")
-                 
-            print("Test finished")
-            notifications = session.getErrorNotifications()
-            for notification in notifications:
-                print("[Debug] Notification: " + str(notification.message))
-
-            '''
-            try:
-                print "Starting the test..."
-                results = session.runTest()
-                
-            except Exception, e:
-                if 'The error was detected at runtime.' in str(e):
-                    print("DEBUG: There was a runtime problem, can be a simple endpoint pairs not able to communicate, check results for 0 performance combinations")
-                else:
-                    print("ERROR: THERE WAS A PROBLEM RUNNING THE TEST, EXITING")
-                    print "Error", e 
-                    exit(1)
-                 
-            '''    
-            
-
-            
-            #time.ctime() # 'Mon Oct 18 13:35:29 2010'
-            #time.strftime('%l:%M%p %Z on %b %d, %Y') # ' 1:36PM EDT on Oct 18, 2010'
-            #time.strftime('%l:%M%p %z on %b %d, %Y') # ' 1:36PM EST on Oct 18, 2010' 
             
             if stats_zip == "yes":
-                #Save all results to CSV files.
-                print("SAVING RESULTS to zipped CSV files DUE json \generate-stats-zip\":\"yes\"")
-                print("Saving the test results into zipped CSV files...\n")                
-                filePath = time.strftime('%Y_%b_%d_%H_%M_%p_') + "_testResults.zip"
-                print("Saving into " + filePath)
-                with open(filePath, "wb+") as statsFile:
-                    self.api.getStatsCsvZipToFile(result.testId, statsFile)
-                #self.api.getStatsCsvZipToFile(session.sessionId, statsFile)
-                    
-                
-            # Get results after test run.
-            # The functions below can also be used while the test is running, by using session.startTest() to start the execution,
-            # calling any of the results retrieval functions during the run, and using session.waitTestStopped() to wait for test end.
-            # You can use time.sleep() to call the results retrieval functions from time to time.
-            # These functions will return statistics for all the timestamps reported since the beginning of the test until the current moment.
-            results = ixchariotApi.getTestLevelResults(session, ["Throughput"])
-            
-            # Get test level results.
-            # Note: the statistic names should be identical to those that appear in the results CSV
-            
-            print "Aggregated Total Results: \n"
-            for res in results:
-                # Each object in the list of results is of type Statistic (contains the statistic name and a list of StatisticValue objects).
-                print(res.name)
-                for val in res.values:
-                    # The list will contain StatisticValue objects for all the reported timestamps since the beginning of the test.
-                    # Each StatisticValue object contains the timestamp and the actual value.
-                    print("time:" + str(val.timestamp) + "ms    " + str(val.value / 1048576) + "Mbps")
-                print("")
-               
-            # Get flow level results
-            # Note: the statistic names should be identical to those that appear in the results CSV
-            print("FLOW STATISTICS: ")
-            for flow in flow_names:
-                results = ixchariotApi.getFlowLevelResults(session, ["Min Throughput", "Avg Throughput","Max Throughput"], flow, "TCP Baseline Performance", "TCP")
-                if results[1].values[-1].value is str or results[1].values[-1].value == "N/A":
-                    print("FLOW: " + flow + " - NO RESULTS - CONNECTION FAILED!")
-                else:
-                    print("FLOW: " + flow + " [min/avg/max]: " + str(results[0].values[-1].value / 1048576) + "Mbps/" + str(results[1].values[-1].value / 1048576) + "Mbps/" + str(results[2].values[-1].value / 1048576) + "Mbps ["+ str(results[0].values[-1].value) + "bps/" + str(results[1].values[-1].value) + "bps/" + str(results[2].values[-1].value) + "bps]")
-                
-                #for res in results:
-                #    print res.name
-                #    print res.values[-1].timestamp
-                #    print res.values[-1].value
-                #    print ""                
+                self.run_test(session.sessionId, 1)
+            else:
+                self.run_test(session.sessionId, 0)
 
-            
-              
-        
+
         if delete_session_at_end == "yes":
             session.stopSession()
             print("SESSION " +str(session.sessionId)+ " DELETION DUE json \"delete-session-at-end\":\"yes\"")

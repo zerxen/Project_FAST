@@ -659,7 +659,7 @@ class nuage_vspk_wrapper():
                         return vmint.ip_address       
         
                          
-        return "not-found"
+        return None
                 
     '''
     Tree

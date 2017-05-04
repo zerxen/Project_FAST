@@ -7,9 +7,14 @@
             "endpoint-types":"explicit",
             "delete-session-at-end":"yes",
             "generate-stats-zip":"no",
-            "test-duration":"10",
+            "test-duration":"300",
             "autostart":"yes",
             "endpoints": [
+              {
+                "type":"static",
+                "ixia-management-ip":"29.203.248.19",
+                "endpoint-ip":"3.3.3.250"
+              },
               {
                 "type":"static",
                 "ixia-management-ip":"29.203.248.17",

@@ -1,0 +1,31 @@
+{
+"tests" :
+  [
+      {
+            "type":"connectivity-mesh",
+            "name":"TEST01 - internal VMs + PMs connectivity test",
+            "endpoint-types":"explicit",
+            "delete-session-at-end":"yes",
+            "generate-stats-zip":"no",
+            "test-duration":"300",
+            "autostart":"yes",
+            "endpoints": [
+              {
+                "type":"static",
+                "ixia-management-ip":"29.203.248.19",
+                "endpoint-ip":"3.3.3.250"
+              },
+              {
+                "type":"nuage-vm",
+                "ixia-management-ip":"29.203.248.130",
+                "endpoint-ip":"auto",
+                "nuage-vm-name": "FAST-CL1-2nic-ixia130",
+                "nuage-vm-enterprise": "AutomatedHelloWorld",
+                "nuage-vm-domain":"Instance1",
+                "nuage-vm-zone":"private2",
+                "nuage-vm-subnet":"subnet3"
+              }
+            ]
+      }
+  ]
+}

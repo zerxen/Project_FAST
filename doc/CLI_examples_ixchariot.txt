@@ -3,4 +3,6 @@
 # SO PROJECT FAST IS CURRENTLY ONLY TARGETING JSON DEFINED TESTS FORMAT
 ##
 
-# python2 project_fast.py ixchariot load doc\example_full_test_case\test01\ixchariot_test01.json
+python2 project_fast.py ixchariot run session --id 203
+#
+python2 project_fast.py ixchariot load doc\example_full_test_case\test01\ixchariot_test01.json

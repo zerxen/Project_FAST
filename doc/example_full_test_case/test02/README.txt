@@ -5,7 +5,7 @@ python2 project_fast.py nuage load doc\example_full_test_case\test02\nuage_topol
 python2 project_fast.py vmware load doc\example_full_test_case\test02\vmware_vms.json
 
 3) IxChariot TEST 01 (IGNORED DUE TIME):
-python2 project_fast.py ixchariot load doc\example_full_test_case\test02\ixchariot_test01.json
+python2 project_fast.py ixchariot load doc\example_full_test_case\test02\ixchariot_test01_VMs_onlt.json
 
 4) VTEPs ADD (40seconds)
 python2 project_fast.py nuage assign enterprise-to-gateway-vlan --entname AutomatedHelloWorld --gateway 29.203.0.43 --gateway-interface "usplnACvpclab1002:::Ten-GigabitEthernet1/0/33" --vlan-id 8 

@@ -16,6 +16,7 @@ from vmware.vmware_delete import vmware_delete
 from vmware.vmware_load_json import vmware_load_json
 from ixchariot.ixchariot_experiments import ixchariot_experiments
 from ixchariot.ixchariot_load_json import ixchariot_load_json
+from ixchariot.ixchariot_run import ixchariot_run
 
 
 def nuage_load(args):
@@ -102,6 +103,13 @@ if __name__ == "__main__":
     subparsers_ixchariot = parser_ixchariot.add_subparsers()
     parsers_ixchariot_experiments = subparsers_ixchariot.add_parser('experiments')
     parsers_ixchariot_load = subparsers_ixchariot.add_parser('load')
+    parsers_ixchariot_run = subparsers_ixchariot.add_parser('run')
+    
+    # ixia RUN PARAMETERS
+    parsers_ixchariot_run.add_argument('OBJECT',choices=['session'],help='run existing ixcharriot test and collect results')
+    parsers_ixchariot_run.add_argument('--id', nargs=1, help='Specify session ID to run', default="")
+    parsers_ixchariot_run.add_argument('--generate-zip', action='store_const', const=1, default=0, help='will generate a ZIP file with full stats')   
+    parsers_ixchariot_run.set_defaults(func=ixchariot_run)      
     
     # ixia EXPERMENTS PARAMETERS
     parsers_ixchariot_experiments.add_argument('OBJECT',choices=['test01'],help='alpha test, non-interactive, you have to edit ixchariot_sample.py ')
