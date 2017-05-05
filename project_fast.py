@@ -257,7 +257,9 @@ if __name__ == "__main__":
     
     # Binding parsers to arges
     args = parser.parse_args()
-    args.func(args)
+    return_code = args.func(args)
+    print("Return code:" + str(return_code))
+    exit(return_code)
     
     
         

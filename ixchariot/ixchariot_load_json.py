@@ -48,9 +48,13 @@ def ixchariot_load_json(args):
     ixchariot = ixchariot_webapi_wrapper()
     ixchariot.connect()
     
+    print("Connected, executing test...")
+    
     for test in data['tests']:
         if test['type'] == 'connectivity-test' and test['endpoint-types'] == 'explicit':
             ixchariot.connectivity_test(test['name'],test['test-duration'],test['delete-session-at-end'],test['autostart'],test['endpoints'],test['generate-stats-zip'],test.get('optional-star-centers',None))
+        else:
+            print("Unknown test type, skipping.")
         
             
             

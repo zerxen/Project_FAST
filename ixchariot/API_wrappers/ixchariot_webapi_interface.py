@@ -155,7 +155,8 @@ class ixchariot_webapi_wrapper():
                     print("XXX----------------------------XXX")
                     print("XXX One endpoint generator     XXX")
                     print("XXX doesn't have a correct IP! XXX")
-                    print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")                                  
+                    print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+                    return 1;                                  
                 
         iFlowID = 0;
 
@@ -179,6 +180,7 @@ class ixchariot_webapi_wrapper():
                         print("XXX One endpoint generator     XXX")
                         print("XXX doesn't have a correct IP! XXX")
                         print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+                        return 1;  
                     
                     '''
                     CREATION OF FLOW DEFINITION FOR THIS COMBINATION

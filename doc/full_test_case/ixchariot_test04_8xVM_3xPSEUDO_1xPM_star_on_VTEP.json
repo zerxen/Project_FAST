@@ -3,7 +3,10 @@
   [
       {
             "type":"connectivity-test",
-            "name":"TEST01 - internal VMs + PMs connectivity test",
+            "optional-star-centers": [
+                "3.3.3.250"
+            ],
+            "name":"TEST03 - VM 128 and VM129 to all other destinations",
             "endpoint-types":"explicit",
             "delete-session-at-end":"no",
             "generate-stats-zip":"no",
