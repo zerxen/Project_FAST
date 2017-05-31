@@ -19,6 +19,7 @@ def ixchariot_load_json(args):
             if test.get('optional-star-centers',None) is not None:
                 for star in test['optional-star-centers']:
                     print("    star node:" + star)
+            print("    optional-sigle-use-stars: " + test.get('optional-single-use-stars','no'))
             print("    endpoint-types:" + test['endpoint-types'])
             print("    delete session at the end?:" + test['delete-session-at-end'])
             print("    generate stats zip?:" + test['generate-stats-zip'])
@@ -52,7 +53,7 @@ def ixchariot_load_json(args):
     
     for test in data['tests']:
         if test['type'] == 'connectivity-test' and test['endpoint-types'] == 'explicit':
-            ixchariot.connectivity_test(test['name'],test['test-duration'],test['delete-session-at-end'],test['autostart'],test['endpoints'],test['generate-stats-zip'],test.get('optional-star-centers',None))
+            ixchariot.connectivity_test(test['name'],test['test-duration'],test['delete-session-at-end'],test['autostart'],test['endpoints'],test['generate-stats-zip'],test.get('optional-star-centers',None),test.get('optional-single-use-stars',False))
         else:
             print("Unknown test type, skipping.")
         

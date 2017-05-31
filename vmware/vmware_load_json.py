@@ -85,7 +85,7 @@ def vmware_load_json(args):
                                             power_on,
                                             no_dxc)
             
-            if return_code != 0 or return_code is not None:
+            if return_code is not None and return_code != 0  :
                 return return_code            
             
         else:
