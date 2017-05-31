@@ -19,7 +19,10 @@ def vmware_create(args):
             return 1
         if args.resource_pool is None or args.resource_pool == '':
             print("You didn't specified resource pool with --resource-pool")
-            return 1
+            return 1      
+        if args.datastore is None or args.datastore == '':
+            print("You didn't specified datastore with --datastore")
+            return 1        
         if args.name is None or args.name == '':
             print("You didn't specified name with --name")
             return 1
@@ -69,7 +72,8 @@ def vmware_create(args):
             return 1  
         
         vcenter.create_vm_from_template(args.template[0], 
-                                        args.resource_pool[0], 
+                                        args.resource_pool[0],
+                                        args.datastore[0], 
                                         args.name[0], 
                                         args.nuage_enterprise[0], 
                                         args.nuage_user[0], 

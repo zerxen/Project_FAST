@@ -143,6 +143,7 @@ if __name__ == "__main__":
     # VMWARE CREATE PARAMETERS
     parsers_vmware_create.add_argument('OBJECT',choices=['vm'],help='Select what type of vmware objects you would like created')
     parsers_vmware_create.add_argument('--template', nargs=1, help='Specify template to clone for new VM', default="")
+    parsers_vmware_create.add_argument('--datastore', nargs=1, help='Specify datastore to clone for new VM', default="")
     parsers_vmware_create.add_argument('--resource-pool', nargs=1, help='Specify resource-pool for new VM', default="")
     parsers_vmware_create.add_argument('--name', nargs=1, help='Specify name for new VM', default="")
     parsers_vmware_create.add_argument('--nuage-enterprise', nargs=1, help='Specify nuage-enterprise to clone for new VM', default="")

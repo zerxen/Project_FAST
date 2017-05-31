@@ -5,7 +5,7 @@
             "type":"connectivity-test",
             "name":"TEST01 - VTEP systems only connectivity test",
             "endpoint-types":"explicit",
-            "delete-session-at-end":"yes",
+            "delete-session-at-end":"no",
             "generate-stats-zip":"no",
             "test-duration":"10",
             "autostart":"yes",

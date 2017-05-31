@@ -22,6 +22,7 @@ def vmware_load_json(args):
             print("    autopower: " + vm['autopower'])
             print("    template:" + vm['template'])
             print("    resource-pool: " + vm["resource-pool"])
+            print("    datastore: " + vm["datastore"])
             print("    nuage-enterprise" + vm['nuage-enterprise'])
             print("    nuage-user: " + vm['nuage-enterprise'])
             print("    ixia-address: " + vm['ixia-address'])
@@ -60,8 +61,9 @@ def vmware_load_json(args):
             if vm['autopower'] == "yes":
                 power_on = 1
                 
-            vcenter.create_vm_from_template(vm['template'], 
-                                            vm['resource-pool'], 
+            return_code = vcenter.create_vm_from_template(vm['template'], 
+                                            vm['resource-pool'],
+                                            vm["datastore"], 
                                             vm['name'], 
                                             vm['nuage-enterprise'], 
                                             vm['nuage-user'],
@@ -81,10 +83,16 @@ def vmware_load_json(args):
                                             vm['ixia-dns2'], 
                                             vm['ixia-nic-domain'],
                                             power_on,
-                                            no_dxc)            
+                                            no_dxc)
+            
+            if return_code != 0 or return_code is not None:
+                return return_code            
             
         else:
             print("UNKNOWN VM TYPE!")
+            return 1
+            
+    return return_code
     
        
     

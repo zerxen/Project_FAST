@@ -26,6 +26,7 @@ python2 project_fast.py nuage create vtep --entname AutomatedHelloWorld --domnam
 
 3) TEST ALL THE L3VTEP SYSTEMS CAN COMMUNICATE
 python2 project_fast.py ixchariot load doc\full_test_case\ixchariot_test01_3xPSEUDO_1xPM.json
+/// python2 project_fast.py ixchariot run session --id xx
 
 ###########################################
 # CONTINUE ONLY IF TEST SUCCESFULL ########
@@ -39,10 +40,31 @@ python2 project_fast.py vmware load doc\full_test_case\vmware_vms.json
 ###########################################
 
 5) TEST FULL MESH CONNECTIIVTY
-python2 project_fast.py ixchariot load doc\full_test_case\ixchariot_test01_3xPSEUDO_1xPM.json
+python2 project_fast.py ixchariot load doc\full_test_case\ixchariot_test02_10xVM_3xPSEUDO_1xPM_mesh.json
+/// python2 project_fast.py ixchariot run session --id X
 
-6) TEST STAR CONNECTIIVTY FROM TWO VMs
-python2 project_fast.py ixchariot load doc\example_full_test_case\test02_3nic\ixchariot_test01_4xVM_3xPSEUDO_1xPM.json
+6) TEST STAR CONNECTIIVTY FROM FOUR VMs [260]
+python2 project_fast.py ixchariot load doc\full_test_case\ixchariot_test03_10xVM_3xPSEUDO_1xPM_star.json
+
+7) TEST STAR CONNECTIIVTY FROM VTEP
+python2 project_fast.py ixchariot load doc\full_test_case\ixchariot_test04_10xVM_3xPSEUDO_1xPM_star_on_VTEP.json
+
+7) TEST STAR CONNECTIIVTY VIA OOB to VM ixia 137
+python2 project_fast.py ixchariot load doc\full_test_case\ixchariot_test05_10xVM_3xPSEUDO_1xPM_star_on_pseudo_VTEP.json
+
+###########################################
+# MTU PERFORMANCE TESTS ###################
+###########################################
+
+8) ONE ESX, TWO VMs on L2 [258]
+python2 project_fast.py ixchariot load doc\full_test_case\ixchariot_test06_two_vms_one_esx_L2.json
+
+9) ONE ESX, TWO VMs on L3 [259]
+python2 project_fast.py ixchariot load doc\full_test_case\ixchariot_test07_two_vms_one_esx_L3.json
+
+10) Two ESX, 2-3 VMs in each cross-performance (e.g. all VMs on ESX1 to all VMS on ESX1)
+python2 project_fast.py ixchariot load doc\full_test_case\ixchariot_test08_ESX1_VMs_to_others.json
+
 
 ##################################################
 ## DELECTION AND REMOVAL SO YOU CAN START AGAIN ##

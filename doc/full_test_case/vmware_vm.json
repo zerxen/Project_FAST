@@ -1,0 +1,31 @@
+{
+"vms" :
+  [
+    {
+        "type":"2nic-no-DXC",
+        "name":"FAST-CL1-2nic-ixia128",
+        "autopower":"yes",
+        "template":"NextGenTestingVM_v5",
+        "resource-pool":"ComputeCluster1_script_VMs_pool",
+        "datastore":"pln-ng1-pc1-vms01",
+        "nuage-enterprise":"AutomatedHelloWorld",
+        "nuage-user":"phavrila",
+        "nuage-nics": [
+          {
+            "name":"nic0",
+            "domain":"Instance1",
+            "zone":"private1",
+            "subnet":"subnet1",
+            "ip-type":"static",
+            "ip":"1.1.1.128"
+          }
+        ],
+        "ixia-address":"29.203.248.128",
+        "ixia-netmask":"255.255.255.0",
+        "ixia-gateway":"",
+        "ixia-dns1":"15.163.248.60",
+        "ixia-dns2":"15.163.248.61",
+        "ixia-nic-domain":"ng1labpln.mcloud.entsvcs.net"
+    }
+  ]
+}

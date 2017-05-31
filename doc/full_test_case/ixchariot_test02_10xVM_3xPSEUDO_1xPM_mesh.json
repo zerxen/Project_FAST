@@ -109,9 +109,28 @@
                 "nuage-vm-domain":"Instance1",
                 "nuage-vm-zone":"private2",
                 "nuage-vm-subnet":"subnet3"
+              },
+              {
+                "type":"nuage-vm",
+                "ixia-management-ip":"29.203.248.136",
+                "endpoint-ip":"auto",
+                "nuage-vm-name": "FAST-CL1-2nic-ixia136",
+                "nuage-vm-enterprise": "AutomatedHelloWorld",
+                "nuage-vm-domain":"Instance1",
+                "nuage-vm-zone":"private1",
+                "nuage-vm-subnet":"subnet1"
+              },
+              {
+                "type":"nuage-vm",
+                "ixia-management-ip":"29.203.248.137",
+                "endpoint-ip":"auto",
+                "nuage-vm-name": "FAST-CL1-2nic-ixia137",
+                "nuage-vm-enterprise": "AutomatedHelloWorld",
+                "nuage-vm-domain":"Instance1",
+                "nuage-vm-zone":"private2",
+                "nuage-vm-subnet":"subnet3"
               }
             ]
-
       }
   ]
 }

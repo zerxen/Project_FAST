@@ -73,16 +73,28 @@ class ixchariot_webapi_wrapper():
         # Get test level results.
         # Note: the statistic names should be identical to those that appear in the results CSV
         results = ixchariotApi.getTestLevelResults(session, ["Throughput"])    
-        print "Aggregated Total Results: \n"
+        print("Aggregated Total Results:")
+        min = 9000000000
+        max = 0
+        average = 0
+        number_of_items = 0
         for res in results:
             # Each object in the list of results is of type Statistic (contains the statistic name and a list of StatisticValue objects).
             print(res.name)
             for val in res.values:
                 # The list will contain StatisticValue objects for all the reported timestamps since the beginning of the test.
                 # Each StatisticValue object contains the timestamp and the actual value.
-                print("time:" + str(val.timestamp) + "ms    " + str(val.value / 1048576) + "Mbps")
-            print("")
+                #print("time:" + str(val.timestamp) + "ms    " + str(val.value / 1048576) + "Mbps")
+                if val.value > max :
+                    max = val.value
+                if val.value < min :
+                    min = val.value
+                average = average + val.value
+                number_of_items = number_of_items + 1
+            #print("")
             
+        print("    MIN: " + str(min / 1048576) + "Mbps AVG:" + str(average / number_of_items / 1048576) + "Mbps MAX:" + str(max/ 1048576) + "Mbps")
+        print("")    
         print('Generate_zip ? == ' + str(generate_zip))
         if generate_zip == 1:
             #Save all results to CSV files.
@@ -168,6 +180,10 @@ class ixchariot_webapi_wrapper():
                     print("Breaking flow as optional-star-center defined, and not matched")
                     continue
                 
+                if optional_star_centers_array is not None and endpoint_DST['endpoint-ip'] in optional_star_centers_array and endpoint_SRC['endpoint-ip'] in optional_star_centers_array:
+                    print("Both endpoints are from the same star center, removing ...")  
+                    continue              
+                
                 if endpoint_DST['endpoint-ip'] != endpoint_SRC['endpoint-ip']:
                     print("=====================================")
                     print("SRC "+endpoint_SRC['type']+" ip:" + endpoint_SRC['endpoint-ip'] + "[" + endpoint_SRC["ixia-management-ip"] + "]")                    
@@ -187,7 +203,7 @@ class ixchariot_webapi_wrapper():
                     '''
                     # Create a new FlowGroup
                     iFlowID = iFlowID + 1
-                    name = "S:" + endpoint_SRC['endpoint-ip'] + " D:" + endpoint_DST['endpoint-ip']
+                    name = endpoint_SRC['endpoint-ip'] + "-" + endpoint_DST['endpoint-ip']
                     flow_names.append(name)
                     print("FLOWGROUP creation: " + name)
                     direction = "SRC_TO_DEST"
@@ -207,7 +223,10 @@ class ixchariot_webapi_wrapper():
                     
                     flowList = [
                                     # Data flows
-                                    ["TCP Baseline Performance",     1,          "TCP",      "Best Effort",    "Background"]
+                                    ["TCP Baseline Performance",     1,          "TCP",      "None",    "None"]
+                                    #["UDP Baseline Performance",     1,          "UDP",      "None",    "None"]
+                                    #["UDP Low Performance",     1,          "UDP",      "None",    "None"]
+                                    #["TCP Baseline Performance",     1,          "TCP",      "Best Effort",    "Background"]
                                     #["UDP Baseline Performance",    3,          "UDP",      "Background",    "None"],
                                 
                                     # VoIP flows
@@ -231,6 +250,8 @@ class ixchariot_webapi_wrapper():
                     
                         # TH   IS IS NECESSARY TO WORK WITH VTEPS
                         #ixchariotApi.changeFlowScriptParameterValue(flowScript, "MSS", "1410")
+                        ixchariotApi.changeFlowScriptParameterValue(flowScript, "Send Buffer Size", "1300")
+                        ixchariotApi.changeFlowScriptParameterValue(flowScript, "Receive Buffer Size", "1300")
                         # Example for changing the parameter values
                         #if i == 3:
                         #    ixchariotApi.changeFlowScriptParameterValue(flowScript, "Bit Rate", "9.8 Mbps")

@@ -135,11 +135,24 @@ class vmware_pyvmomi_wrapper(object):
         rp_list = obj_view.view
     
         for rp in rp_list:
-            print('Checking resource pool %s' % rp.name)
+            print('Checking Resource pool  %s' % rp.name)
             if rp.name == name:
-                print('Found resource pool %s' % rp.name)
+                print('Found Resource poo %s' % rp.name)
                 return rp
         return None
+    
+    """
+     Get the datastore based on name
+    """
+    def get_datastore(self,name):
+        for dc in self.vc.content.rootFolder.childEntity:
+            print('Checking Datacenter %s' % dc)
+            for ds in dc.datastore:
+                print('Checking DataStore %s' % ds.name)
+                if ds.name == name:
+                    print('Found! %s' % name)
+                    return ds
+        return None                    
     
     
     def find_folder(self, name):
@@ -212,6 +225,7 @@ class vmware_pyvmomi_wrapper(object):
     
     def create_vm_from_template(self,template,
                                 resource_pool,
+                                datastore,
                                 name,
                                 nuage_enterprise,
                                 nuage_user,
@@ -277,6 +291,17 @@ class vmware_pyvmomi_wrapper(object):
             return 1
         print('Template %s found' % template)   
         
+        
+        # Find the correct Datastore
+        print('Finding datastore %s' % datastore)
+        datastore_object = self.get_datastore(datastore)    
+        if datastore_object is None:
+            print('Unable to find datastore %s' % datastore)
+            return 1
+        print('datastore %s found' % datastore)   
+        
+                
+        
         # Find the correct Resource Pool
         print('Finding resource pool %s' % resource_pool)
         resource_pool_object = self.find_resource_pool(resource_pool)
@@ -285,19 +310,25 @@ class vmware_pyvmomi_wrapper(object):
             return 1
         print('Resource pool %s found' % resource_pool)
         
+     
+        
         # Find the correct folder
         print('Setting folder to template folder as default: ')
         folder = template_vm.parent
         print(folder)    
         
         # Creating necessary specs
-        print('Creating relocate spec')
-        if resource_pool_object is not None:
-            print('Resource pool found, using')
-            relocate_spec = vim.vm.RelocateSpec(pool=resource_pool_object)
-        else:
+        print('Creating relocate spec from datastore and resouce pool')
+        
+        
+        if resource_pool_object is None:
             print('No resource pool found!')
-            return 1   
+            return 1     
+        if datastore_object is None:
+            print('No datastore found!')
+            return 1                    
+        else:
+            relocate_spec = vim.vm.RelocateSpec(pool=resource_pool_object,datastore=datastore_object)  
         
         print('Creating clone spec')
         clone_spec = vim.vm.CloneSpec(powerOn=False, template=False, location=relocate_spec)   
