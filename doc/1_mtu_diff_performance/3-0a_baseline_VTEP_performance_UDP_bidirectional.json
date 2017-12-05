@@ -1,0 +1,42 @@
+{
+"tests" :
+  [
+      {
+            "type":"connectivity-test",
+            "name":"TEST01 - VTEP systems only connectivity test",
+            "endpoint-types":"explicit",
+            "optional-traffic-ixia-flow":"UDP Baseline Performance",
+            "optional-traffic-ixia-protocol":"UDP",
+            "optional-star-centers": [
+                "3.3.3.250"
+            ],
+            "delete-session-at-end":"yes",
+            "generate-stats-zip":"no",
+            "test-duration":"30",
+            "autostart":"yes",
+            "endpoints": [
+              {
+                "type":"static",
+                "ixia-management-ip":"29.203.248.19",
+                "endpoint-ip":"3.3.3.250"
+              },
+              {
+                "type":"static",
+                "ixia-management-ip":"29.203.248.17",
+                "endpoint-ip":"2.2.2.252"
+              },
+              {
+                "type":"static",
+                "ixia-management-ip":"29.203.248.8",
+                "endpoint-ip":"3.3.3.253"
+              },
+              {
+                "type":"static",
+                "ixia-management-ip":"29.203.248.6",
+                "endpoint-ip":"3.3.3.251"
+              }
+            ]
+
+      }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+"tests" :
+  [
+      {
+            "type":"connectivity-test",
+            "name":"3-3 ten to ten VMs between ESXs",
+            "endpoint-types":"explicit",
+            "optional-traffic-ixia-flow":"TCP Baseline Performance",
+            "optional-traffic-ixia-protocol":"TCP",
+            "optional-star-centers": [
+                "1.1.1.128"
+            ],
+            "optional-stars-unidirectional": "any",
+            "optional-single-use-stars": "no",
+            "delete-session-at-end":"no",
+            "generate-stats-zip":"no",
+            "test-duration":"30",
+            "autostart":"yes",
+            "endpoints": [
+              {
+                "type":"nuage-vm",
+                "ixia-management-ip":"29.203.248.128",
+                "endpoint-ip":"auto",
+                "nuage-vm-name": "FAST-CL1-2nic-ixia128",
+                "nuage-vm-enterprise": "AutomatedHelloWorld",
+                "nuage-vm-domain":"Instance1",
+                "nuage-vm-zone":"private1",
+                "nuage-vm-subnet":"subnet1"
+              },
+              {
+                "type":"static",
+                "ixia-management-ip":"29.203.248.19",
+                "endpoint-ip":"3.3.3.250"
+              }
+
+            ]
+      }
+  ]
+}

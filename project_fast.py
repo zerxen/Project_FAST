@@ -117,6 +117,7 @@ if __name__ == "__main__":
     
     # ixia JSON LOAD PARAMETERS
     parsers_ixchariot_load.add_argument('INFILE', nargs='?', type=argparse.FileType('r'),help='File in JSON format that contains ixchariot test definition',default=sys.stdin)
+    parsers_ixchariot_load.add_argument('--silent', action='store_const', const=1, default=0, help='will only show test results and no test definition logs') 
     parsers_ixchariot_load.set_defaults(func=ixchariot_load_json) 
    
     # Sub-SUB parsers vmware

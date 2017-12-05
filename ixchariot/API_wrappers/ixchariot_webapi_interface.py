@@ -9,6 +9,11 @@ import time
 
 class ixchariot_webapi_wrapper():
     '''
+    SILENT
+    '''
+    bSilent = False;
+    
+    '''
     Initializations
     '''
     def __init__(self):
@@ -73,7 +78,7 @@ class ixchariot_webapi_wrapper():
         # Get test level results.
         # Note: the statistic names should be identical to those that appear in the results CSV
         results = ixchariotApi.getTestLevelResults(session, ["Throughput"])    
-        print("Aggregated Total Results:")
+        #print("Aggregated Total Results:")
         min = 9000000000
         max = 0
         average = 0
@@ -95,7 +100,7 @@ class ixchariot_webapi_wrapper():
             
         print("    MIN: " + str(min / 1048576) + "Mbps AVG:" + str(average / number_of_items / 1048576) + "Mbps MAX:" + str(max/ 1048576) + "Mbps")
         print("")    
-        print('Generate_zip ? == ' + str(generate_zip))
+        # print('Generate_zip ? == ' + str(generate_zip))
         if generate_zip == 1:
             #Save all results to CSV files.
             print("SAVING RESULTS to zipped CSV files DUE json \generate-stats-zip\":\"yes\"")
@@ -133,10 +138,31 @@ class ixchariot_webapi_wrapper():
             else:
                 print("FLOW: " + flow + " [min/avg/max]: " + str(results[0].values[-1].value / 1048576) + "Mbps/" + str(results[1].values[-1].value / 1048576) + "Mbps/" + str(results[2].values[-1].value / 1048576) + "Mbps ["+ str(results[0].values[-1].value) + "bps/" + str(results[1].values[-1].value) + "bps/" + str(results[2].values[-1].value) + "bps]")
         '''
+    def cprint(self,sMessage):
+        if not self.bSilent:
+            print(sMessage)
             
-    def connectivity_test(self,name,test_duration,delete_session_at_end,autostart,endpoints,stats_zip,optional_star_centers_array,optional_single_use_stars):
-        print("ENTERING STAR connectivity TEST RUN")
+    def connectivity_test(self,
+                          name,
+                          test_duration,
+                          delete_session_at_end,
+                          autostart,
+                          endpoints,
+                          stats_zip,
+                          optional_star_centers_array,
+                          optional_single_use_stars,
+                          optional_stars_unidirectional,
+                          optional_traffic_ixia_flow,
+                          optional_traffic_ixia_protocol,
+                          bSilent):
+        
+        ''' SILENT OR NOT ? '''
+        self.bSilent = bSilent
+        
+        
+        self.cprint("ENTERING STAR connectivity TEST RUN")
         session = self.create_session()
+        print("Created SESSION ID: " + str(session.sessionId))
         
         # FLOW NAMES 
         flow_names = []
@@ -178,34 +204,44 @@ class ixchariot_webapi_wrapper():
         for endpoint_SRC in endpoints:                                               
             for endpoint_DST in endpoints:
                 
-                print("")
-                print("====================")
-                print("Evaluating: "+ endpoint_SRC['endpoint-ip'] + "-to-" + endpoint_DST['endpoint-ip'])
+                self.cprint("")
+                self.cprint("====================")
+                self.cprint("Evaluating: "+ endpoint_SRC['endpoint-ip'] + "-to-" + endpoint_DST['endpoint-ip'])
                 
                 if optional_star_centers_array is not None and endpoint_DST['endpoint-ip'] not in optional_star_centers_array and endpoint_SRC['endpoint-ip'] not in optional_star_centers_array:
-                    print("Breaking flow as optional-star-center defined, and not matched")
+                    self.cprint("Breaking flow as optional-star-center defined, and not matched")
                     continue
                 if optional_star_centers_array is not None and endpoint_DST['endpoint-ip'] in optional_star_centers_array and endpoint_SRC['endpoint-ip'] in optional_star_centers_array:
-                    print("Both endpoints are from the same star center, removing ...")  
+                    self.cprint("Both endpoints are from the same star center, removing ...")  
                     continue              
                 
                             
                 if endpoint_DST['endpoint-ip'] != endpoint_SRC['endpoint-ip']:
                     
+                    # optional_stars_unidirectional == SOURCE, skip
+                    if optional_star_centers_array is not None and optional_stars_unidirectional == "source" and endpoint_SRC['endpoint-ip'] not in optional_star_centers_array:
+                        self.cprint(endpoint_SRC['endpoint-ip'] + " skipping. Only stars allowed as sources.")
+                        continue
+                    
+                    # optional_stars_unidirectional == SOURCE, skip
+                    if optional_star_centers_array is not None and optional_stars_unidirectional == "destination" and endpoint_DST['endpoint-ip'] not in optional_star_centers_array:
+                        self.cprint(endpoint_DST['endpoint-ip'] + " skipping. Only stars allowed as destinations.")
+                        continue                    
+
                     if optional_single_use_stars and optional_single_use_stars == 'yes':
                         #OPTIONAL MAKE EVERY STAR CENTER USED ONLY ONCE 
                         if endpoint_DST['endpoint-ip'] in used:
-                            print(endpoint_DST['endpoint-ip'] + " was already used, skipping.")
+                            self.cprint(endpoint_DST['endpoint-ip'] + " was already used, skipping.")
                             continue
                         if endpoint_SRC['endpoint-ip'] in used:
-                            print(endpoint_SRC['endpoint-ip'] + " was already used, skipping.")
+                            self.cprint(endpoint_SRC['endpoint-ip'] + " was already used, skipping.")
                             continue                       
                         used.append(endpoint_SRC['endpoint-ip'])
                         used.append(endpoint_DST['endpoint-ip'])
                     
                     #print("=====================================")
-                    print("SRC "+endpoint_SRC['type']+" ip:" + endpoint_SRC['endpoint-ip'] + "[" + endpoint_SRC["ixia-management-ip"] + "]")                    
-                    print("DST "+endpoint_DST['type']+" ip:" + endpoint_DST['endpoint-ip'] + "[" + endpoint_DST["ixia-management-ip"] + "]") 
+                    self.cprint("SRC "+endpoint_SRC['type']+" ip:" + endpoint_SRC['endpoint-ip'] + "[" + endpoint_SRC["ixia-management-ip"] + "]")                    
+                    self.cprint("DST "+endpoint_DST['type']+" ip:" + endpoint_DST['endpoint-ip'] + "[" + endpoint_DST["ixia-management-ip"] + "]") 
                     
                     if endpoint_SRC['endpoint-ip'] == 'not-found' or endpoint_DST['endpoint-ip'] == 'not-found':
                         print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
@@ -223,7 +259,7 @@ class ixchariot_webapi_wrapper():
                     iFlowID = iFlowID + 1
                     name = endpoint_SRC['endpoint-ip'] + "-" + endpoint_DST['endpoint-ip']
                     flow_names.append(name)
-                    print("FLOWGROUP creation: " + name)
+                    self.cprint("FLOWGROUP creation: " + name)
                     direction = "SRC_TO_DEST"
                     topology = "FULL_MESH"
                     flowgroup = ixchariotApi.createFlowGroup(name, direction, topology)
@@ -239,9 +275,14 @@ class ixchariot_webapi_wrapper():
                                          endpoint_DST['endpoint-ip'], 
                                          endpoint_DST["ixia-management-ip"])) 
                     
+                    
                     flowList = [
+                                    [optional_traffic_ixia_flow, 1, optional_traffic_ixia_protocol, "None", "None"]
+                                ]
+                    
+                    #flowList = [
                                     # Data flows
-                                    ["TCP Baseline Performance",     1,          "TCP",      "None",    "None"]
+                    #                ["TCP Baseline Performance",     1,          "TCP",      "None",    "None"]
                                     #["UDP Baseline Performance",     1,          "UDP",      "None",    "None"]
                                     #["UDP Low Performance",     1,          "UDP",      "None",    "None"]
                                     #["TCP Baseline Performance",     1,          "TCP",      "Best Effort",    "Background"]
@@ -255,7 +296,7 @@ class ixchariot_webapi_wrapper():
                                     
                                     # Adaptive video over HTTP flows
                                     #["Netflix Video SD",            1,         "TCP",     "None",            "None"]
-                                ]
+                    #            ]
 
                     for i in range (0, len(flowList)):
                         flowData = flowList[i]
@@ -287,8 +328,8 @@ class ixchariot_webapi_wrapper():
         
         if autostart == "yes":
             
-            print("")
-            print("EXECUTING TEST VIA json AUTOSTART=\"yes\"")
+            self.cprint("")
+            self.cprint("EXECUTING TEST VIA json AUTOSTART=\"yes\"")
             
             if stats_zip == "yes":
                 self.run_test(session.sessionId, 1)

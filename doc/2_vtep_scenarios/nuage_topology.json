@@ -1,0 +1,134 @@
+{
+    "enterprise": "AutomatedHelloWorld",
+    "users": [
+        {
+            "username":"phavrila",
+            "password":"kreten123",
+            "useremail":"none@none.sk",
+            "firstname":"Peter",
+            "lastname":"Havrila"
+        }
+    ],
+    "groups": [
+        {
+            "groupname":"group_test",
+            "members": [
+                {
+                    "username":"phavrila"
+                }
+            ]
+        }
+    ],
+    "domaintemplates": [
+        {
+            "domaintemplate": "Template1"
+        }
+    ],
+    "domains": [
+        {
+            "domain": "Instance1",
+            "template_parent": "Template1",
+            "permissions": [
+              {
+                "type":"DEPLOY",
+                "group":"group_test"
+              }
+            ],
+            "zones": [
+                {
+                    "zone": "private1",
+                    "permissions": [
+                      {
+                        "type":"USE",
+                        "group":"group_test"
+                      }
+                    ],
+                    "subnets": [
+                        {
+                            "subnet": "subnet1",
+                            "address": "1.1.1.0",
+                            "netmask": "255.255.255.0",
+                            "dhcp-options": [
+                                {
+                                    "type":"121",
+                                    "prefix":"8.8.8.8",
+                                    "mask":"32",
+                                    "nexthop":"1.1.1.5"
+                                }
+                            ]
+                        },
+                        {
+                            "subnet": "subnet2",
+                            "address": "2.2.2.0",
+                            "netmask": "255.255.255.0",
+                            "dhcp-options": [
+                                {
+                                    "type":"121",
+                                    "prefix":"8.8.8.8",
+                                    "mask":"32",
+                                    "nexthop":"1.1.1.5"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "zone": "private2",
+                    "permissions": [
+                      {
+                        "type":"USE",
+                        "group":"group_test"
+                      }
+                    ],
+                    "subnets": [
+                        {
+                            "subnet": "subnet3",
+                            "address": "3.3.3.0",
+                            "netmask": "255.255.255.0",
+                            "dhcp-options": []
+                        }
+                    ]
+                }
+            ],
+            "acls": [
+                {
+                    "type":"permit-all"
+                }
+            ]
+        },
+        {
+            "domain": "Instance2",
+            "template_parent": "Template1",
+            "permissions": [
+              {
+                "type":"DEPLOY",
+                "group":"group_test"
+              }
+            ],
+            "zones": [
+                {
+                    "zone": "private1",
+                    "permissions": [
+                      {
+                        "type":"USE",
+                        "group":"group_test"
+                      }
+                    ],
+                    "subnets": [
+                        {
+                            "subnet": "subnet1",
+                            "address": "4.4.4.0",
+                            "netmask": "255.255.255.0",
+                            "dhcp-options": []
+                        }
+                    ]
+                }
+            ],
+            "acls": [
+                {
+                    "type":"permit-all"
+                }
+            ]
+        }
+    ]
+}

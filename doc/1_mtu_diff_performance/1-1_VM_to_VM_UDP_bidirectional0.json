@@ -1,0 +1,39 @@
+{
+"tests" :
+  [
+      {
+            "type":"connectivity-test",
+            "name":"1-1 VM to VM",
+            "endpoint-types":"explicit",
+            "delete-session-at-end":"no",
+            "optional-traffic-ixia-flow":"UDP Baseline Performance",
+            "optional-traffic-ixia-protocol":"UDP",
+            "generate-stats-zip":"no",
+            "test-duration":"30",
+            "autostart":"yes",
+            "endpoints": [
+              {
+                "type":"nuage-vm",
+                "ixia-management-ip":"29.203.248.128",
+                "endpoint-ip":"auto",
+                "nuage-vm-name": "FAST-CL1-2nic-ixia128",
+                "nuage-vm-enterprise": "AutomatedHelloWorld",
+                "nuage-vm-domain":"Instance1",
+                "nuage-vm-zone":"private1",
+                "nuage-vm-subnet":"subnet1"
+              },
+              {
+                "type":"nuage-vm",
+                "ixia-management-ip":"29.203.248.129",
+                "endpoint-ip":"auto",
+                "nuage-vm-name": "FAST-CL1-2nic-ixia129",
+                "nuage-vm-enterprise": "AutomatedHelloWorld",
+                "nuage-vm-domain":"Instance1",
+                "nuage-vm-zone":"private1",
+                "nuage-vm-subnet":"subnet2"
+              }
+
+            ]
+      }
+  ]
+}

@@ -1,0 +1,93 @@
+{
+"tests" :
+  [
+      {
+            "type":"connectivity-test",
+            "name":"1-0 10xVM to 10xVM",
+            "endpoint-types":"explicit",
+            "delete-session-at-end":"no",
+            "generate-stats-zip":"no",
+            "test-duration":"30",
+            "autostart":"yes",
+            "optional-traffic-ixia-flow":"UDP Baseline Performance",
+            "optional-traffic-ixia-protocol":"UDP",
+            "optional-star-centers": [
+                "29.203.248.128","29.203.248.129","29.203.248.130","29.203.248.131","29.203.248.132","29.203.248.133","29.203.248.134","29.203.248.135","29.203.248.136","29.203.248.137"
+            ],
+            "optional-stars-unidirectional": "any",
+            "optional-single-use-stars": "no",
+            "endpoints": [
+              {
+                "type":"static",
+                "ixia-management-ip":"29.203.248.128",
+                "endpoint-ip":"29.203.248.128"
+              },
+              {
+                "type":"static",
+                "ixia-management-ip":"29.203.248.129",
+                "endpoint-ip":"29.203.248.129"
+              },
+              {
+                "type":"static",
+                "ixia-management-ip":"29.203.248.130",
+                "endpoint-ip":"29.203.248.130"
+              },
+              {
+                "type":"static",
+                "ixia-management-ip":"29.203.248.131",
+                "endpoint-ip":"29.203.248.131"
+              },
+              {
+                "type":"static",
+                "ixia-management-ip":"29.203.248.132",
+                "endpoint-ip":"29.203.248.132"
+              },
+              {
+                "type":"static",
+                "ixia-management-ip":"29.203.248.133",
+                "endpoint-ip":"29.203.248.133"
+              },
+              {
+                "type":"static",
+                "ixia-management-ip":"29.203.248.134",
+                "endpoint-ip":"29.203.248.134"
+              },
+              {
+                "type":"static",
+                "ixia-management-ip":"29.203.248.135",
+                "endpoint-ip":"29.203.248.135"
+              },
+              {
+                "type":"static",
+                "ixia-management-ip":"29.203.248.136",
+                "endpoint-ip":"29.203.248.136"
+              },
+              {
+                "type":"static",
+                "ixia-management-ip":"29.203.248.137",
+                "endpoint-ip":"29.203.248.137"
+              },
+              {
+                "type":"static",
+                "ixia-management-ip":"29.203.248.19",
+                "endpoint-ip":"29.203.248.19"
+              },
+              {
+                "type":"static",
+                "ixia-management-ip":"29.203.248.17",
+                "endpoint-ip":"29.203.248.17"
+              },
+              {
+                "type":"static",
+                "ixia-management-ip":"29.203.248.8",
+                "endpoint-ip":"29.203.248.8"
+              },
+              {
+                "type":"static",
+                "ixia-management-ip":"29.203.248.6",
+                "endpoint-ip":"29.203.248.6"
+              }
+            ]
+      }
+  ]
+}

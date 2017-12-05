@@ -1,0 +1,33 @@
+{
+"tests" :
+  [
+      {
+            "type":"connectivity-test",
+            "name":"1-0a VM to VM",
+            "optional-star-centers": [
+                "29.203.248.128"
+            ],
+            "optional-stars-unidirectional": "any",
+            "optional-single-use-stars": "no",
+            "optional-traffic-ixia-flow":"UDP Baseline Performance",
+            "optional-traffic-ixia-protocol":"UDP",
+            "endpoint-types":"explicit",
+            "delete-session-at-end":"no",
+            "generate-stats-zip":"no",
+            "test-duration":"30",
+            "autostart":"yes",
+            "endpoints": [
+              {
+                "type":"static",
+                "ixia-management-ip":"29.203.248.128",
+                "endpoint-ip":"29.203.248.128"
+              },
+              {
+                "type":"static",
+                "ixia-management-ip":"29.203.248.129",
+                "endpoint-ip":"29.203.248.129"
+              }
+            ]
+      }
+  ]
+}
