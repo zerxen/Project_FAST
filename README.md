@@ -46,10 +46,16 @@ SM         NMMMMMMMM,.....,,,,MMMMMMMMMMMMMMM.,,,,,7MMMMMMMMMMM           M,
                                                 OMMM
 ```                                                               
 ## Authors (C):
- - Peter Havrila
+ - [Peter Havrila](https://www.linkedin.com/in/peter-havrila-72569529/)
    - phavrila@gmail.com
    - This software is sponsored by [NetworkGeekStuff.com](http://networkgeekstuff.com/)
 
+## Dependencies:
+1) Python 2.7 (unfortunatelly incompatible with Python 3.x)
+2) pip2 install vspk
+3) pip2 install pyvmomi ipaddress
+
+## Usage: 
 Please explore "configuration" directory to know how to configure this software 
 before running it against your Nuage/vmware/ixchariot managment system as access 
 parameters to these systems have to configured first in configuration files, not 
@@ -58,8 +64,5 @@ as command-line arguments!
 Hint: Always explore -h in each level of nested commandline, ergo to see help
 for Nuage CLI commands, use arguments "nuage -h", afterwards "nuage show -h"
 
-## DEPENDENCIES:
-1) Python 2.7 (unfortunatelly incompatible with Python 3.x)
-2) pip2 install vspk
-3) pip2 install pyvmomi ipaddress
+
              
