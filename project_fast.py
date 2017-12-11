@@ -22,14 +22,23 @@ from ixchariot.ixchariot_run import ixchariot_run
 def nuage_load(args):
     nuage_load_json(args)
        
-
- 
 if __name__ == "__main__":
+    
+    VERSION = "Alpha 0.4 (13th December 2018)"
+    PROGRAM_NAME="Project FAST"
+    COPYRIGHT="2017 (c) Peter Havrila"    
     
     parser = argparse.ArgumentParser(
         description=textwrap.dedent('''\
-             CLI & Automation API agregator tool!
-             -----------------------------
+        
+             Project FAST
+             
+             Is a Nuage/vmWare/IxChariot API aggregation and CLI tool, with target 
+             to help you control these systems in a more linux like and scriptable 
+             way for longer and more complex test runs (my original motivation was 
+             to have this tool execute long test scenarios one-by-one in 
+             pre-production tests to avoid shitload of GUI clicking) 
+             ---------------------------------------------------------------------
                                          ..   ..  ..  .... ..                               
                                     ,7MMMMMMMMMMMMMMMMMMMMMMMMMN7,                          
                                IMMMMS...MMMMMMMMMMMMMMMMM+..,,,,,,,MMMS.                    
@@ -73,7 +82,7 @@ if __name__ == "__main__":
              phavrila@gmail.com
              
              Please read README.TXT to know how to configure 
-             this software befor running it against your 
+             this software before running it against your 
              Nuage/vmware/ixchariot as access parameters to these systems
              are taken from these files, not as arguments
              
@@ -85,12 +94,12 @@ if __name__ == "__main__":
              3) pip2 install pyvmomi ipaddress
              
             '''),
-        prog='Project FAST',
-        epilog="2017 (c) Peter Havrila",
+        prog=PROGRAM_NAME,
+        epilog=COPYRIGHT,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument('--version', action='version', version='%(prog)s alpha 0.3')
-    parser.add_argument('-v', help='Enable VERBOSE/DEBUG mode', action='version', version='%(prog)s alpha 0.3')
+    parser.add_argument('--version', action='version', version=('%(prog)s - ' + VERSION))
+    parser.add_argument('-v', action='version', version=('%(prog)s - ' + VERSION))
     subparsers = parser.add_subparsers()
     
     # SUB-PARSERS
