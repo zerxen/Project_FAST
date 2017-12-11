@@ -45,15 +45,18 @@ SM         NMMMMMMMM,.....,,,,MMMMMMMMMMMMMMM.,,,,,7MMMMMMMMMMM           M,
                     MMMMMM                     MMMMMMMM                       
                                                 OMMM
 ```                                                               
-## (c) Peter Havrila
-phavrila@gmail.com
- - This software is sponsored by [NetworkGeekStuff.com](http://networkgeekstuff.com/)
+## Authors (C):
+ - Peter Havrila
+   - phavrila@gmail.com
+   - This software is sponsored by [NetworkGeekStuff.com](http://networkgeekstuff.com/)
 
-Please read README.TXT to know how to configure this software before running it 
-against your Nuage/vmware/ixchariot as access parameters to these systems are 
-taken from these files, not as arguments
+Please explore "configuration" directory to know how to configure this software 
+before running it against your Nuage/vmware/ixchariot managment system as access 
+parameters to these systems have to configured first in configuration files, not 
+as command-line arguments!
 
-Hint: Always explore -h in each level of nested commandline
+Hint: Always explore -h in each level of nested commandline, ergo to see help
+for Nuage CLI commands, use arguments "nuage -h", afterwards "nuage show -h"
 
 ## DEPENDENCIES:
 1) Python 2.7 (unfortunatelly incompatible with Python 3.x)
