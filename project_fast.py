@@ -28,7 +28,7 @@ if __name__ == "__main__":
     
     parser = argparse.ArgumentParser(
         description=textwrap.dedent('''\
-             NextGen VPC lab testing tool!
+             CLI & Automation API agregator tool!
              -----------------------------
                                          ..   ..  ..  .... ..                               
                                     ,7MMMMMMMMMMMMMMMMMMMMMMMMMN7,                          
@@ -69,8 +69,8 @@ if __name__ == "__main__":
                                   MMMMMM                     MMMMMMMM                       
                                                               OMMM
                                                                              
-             (c) Peter Havrila - HPE (soon to be DXC.technology)
-             peter.havrila@hpe.com
+             (c) Peter Havrila
+             phavrila@gmail.com
              
              Please read README.TXT to know how to configure 
              this software befor running it against your 
@@ -86,7 +86,7 @@ if __name__ == "__main__":
              
             '''),
         prog='Project FAST',
-        epilog="2017 (c) Peter Havrila - Hewlett-Packard Enterprise",
+        epilog="2017 (c) Peter Havrila",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument('--version', action='version', version='%(prog)s alpha 0.3')
