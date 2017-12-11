@@ -1,4 +1,4 @@
-Project FAST
+# Project FAST
 
 Is a Nuage/vmWare/IxChariot API aggregation and CLI tool, with target 
 to help you control these systems in a more linux like and scriptable 
@@ -45,7 +45,8 @@ SM          NMMMMMMMM,.....,,,,MMMMMMMMMMMMMMM.,,,,,7MMMMMMMMMMM           M,
                     MMMMMM                     MMMMMMMM                       
                                                 OMMM
 ```                                                               
-(c) Peter Havrila
+## (c) Peter Havrila
+This software is sponsored by [NetworkGeekStuff.com](http://networkgeekstuff.com/)
 phavrila@gmail.com
 
 Please read README.TXT to know how to configure this software before running it 
@@ -54,7 +55,7 @@ taken from these files, not as arguments
 
 Hint: Always explore -h in each level of nested commandline
 
-DEPENDENCIES:
+## DEPENDENCIES:
 1) Python 2.7 (unfortunatelly incompatible with Python 3.x)
 2) pip2 install vspk
 3) pip2 install pyvmomi ipaddress
