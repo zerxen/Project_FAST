@@ -5,7 +5,7 @@ to help you control these systems in a more linux like and scriptable
 way for longer and more complex test runs (my original motivation was 
 to have this tool execute long test scenarios one-by-one in 
 pre-production tests to avoid shitload of GUI clicking) 
----------------------------------------------------------------------
+
                            ..   ..  ..  .... ..                               
                       ,7MMMMMMMMMMMMMMMMMMMMMMMMMN7,                          
                  IMMMMS...MMMMMMMMMMMMMMMMM+..,,,,,,,MMMS.                    
