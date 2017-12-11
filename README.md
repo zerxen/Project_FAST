@@ -13,9 +13,9 @@ pre-production tests to avoid shitload of GUI clicking)
             MMMMMMMMMMMMMMM.,,,,..,,MMMM,,,,,,:MMMMMMMMMMMMMMM                
            MMMMMMMMMMMMMMMNMMMMMMMMMMMMMM MMMMMMMMMMMMMMMMMMMMM               
            NMMMMMMMMMMMMMMMMMMM8,.MMMMMMMMMMMMMMMMMMMMMMMMMMMMZ               
-M           NMMMMMMMMMMMMMMM8,,,,,,MMMM,,,,,,,,MMMMMMMMMMMMMMZM            M  
-SM          NMMMMMMMM,.....,,,,MMMMMMMMMMMMMMM.,,,,,7MMMMMMMMMMM           M,  
-.MM.        NMMMMMMZMMI,,,,,,,.,MMMMMMMMMMMMMMMMM8.,. MMZMMMMMMM         .MM   
+M          NMMMMMMMMMMMMMMM8,,,,,,MMMM,,,,,,,,,MMMMMMMMMMMMMMMM            M  
+SM         NMMMMMMMM,.....,,,,MMMMMMMMMMMMMMM.,,,,,7MMMMMMMMMMM           M,  
+.MM.       NMMMMMMZMMI,,,,,,,.,MMMMMMMMMMMMMMMMM8.,. MMZMMMMMMM         .MM   
 :MMM       NMMMMMMMMMMMMMZMMMMMMMMMMMMMMMMMMMMMM7MMMMMMMMMMMMMM        MM    
  MMMM.     NMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM       MMMM    
   MMMMZ.   NMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM     .MMMM.    
@@ -46,8 +46,8 @@ SM          NMMMMMMMM,.....,,,,MMMMMMMMMMMMMMM.,,,,,7MMMMMMMMMMM           M,
                                                 OMMM
 ```                                                               
 ## (c) Peter Havrila
-This software is sponsored by [NetworkGeekStuff.com](http://networkgeekstuff.com/)
 phavrila@gmail.com
+ - This software is sponsored by [NetworkGeekStuff.com](http://networkgeekstuff.com/)
 
 Please read README.TXT to know how to configure this software before running it 
 against your Nuage/vmware/ixchariot as access parameters to these systems are 
