@@ -11,7 +11,6 @@ python2 project_fast.py vmware create vm --name FAST-2nic-test2 --power-on --tem
 python2 project_fast.py vmware create vm --name FAST-2nic-test3 --power-on --template NextGenTestingVM_CL2_2nic_no_DXC --resource-pool ComputeCluster2_script_VMs_pool  --nuage-enterprise HelloWorld2 --nuage-user appuser  --production-nic-domain Instance1 --production-nic-zone "private1" --production-nic-subnet "subnet1" --no-dxc --ixia-nic-address 29.203.248.130 --ixia-nic-netmask 255.255.255.0 --ixia-nic-dns1 15.163.248.60 --ixia-nic-dns2 15.163.248.61 --ixia-nic-domain ng1labpln.mcloud.entsvcs.net
 python2 project_fast.py vmware create vm --name FAST-2nic-test4 --power-on --template NextGenTestingVM_CL2_2nic_no_DXC --resource-pool ComputeCluster2_script_VMs_pool  --nuage-enterprise HelloWorld2 --nuage-user appuser  --production-nic-domain Instance1 --production-nic-zone "private1" --production-nic-subnet "subnet1" --no-dxc --ixia-nic-address 29.203.248.131 --ixia-nic-netmask 255.255.255.0 --ixia-nic-dns1 15.163.248.60 --ixia-nic-dns2 15.163.248.61 --ixia-nic-domain ng1labpln.mcloud.entsvcs.net
 
-
 ## DELETION COMMANDS:
 python2 project_fast.py vmware delete vm --name FAST-2nic-test1
 python2 project_fast.py vmware delete vm --name FAST-2nic-test2
