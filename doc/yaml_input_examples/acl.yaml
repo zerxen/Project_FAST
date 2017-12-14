@@ -1,0 +1,61 @@
+# YAML DEFINITION FILE FOR AN ACL TO BE LOADED BY Project_FAST SCRIPT
+#=====================================================================
+
+network_macros:
+  - name: "Net15"
+    address: "15.0.0.0"
+    mask: "255.0.0.0" 
+
+  - name: "Net16"
+    address: "16.0.0.0"
+    mask: "255.0.0.0" 
+ 
+    
+network_macro_groups:
+  - name: "SSNManagement"
+    macros: 
+    - name: "Net15"
+    - name: "Net16"     
+
+
+ingress_rules:
+  - {
+      action: 'FORWARD',
+      description: "Permit ANY example",
+      ether_type: '0x0800',
+      flow_logging_enabled: True,
+      location_type: ANY,
+      network_type: ANY,
+      priority: 1001,
+      protocol: 17,
+      reflexive: True,
+      source_port: '*',
+      destination_port: '*',
+      dscp: '*'      
+    }
+  - {
+      action: 'FORWARD',
+      description: 'Allow MySQL DB connections from Web Tier',
+      ether_type: '0x0800',
+      location_type: 'ZONE',
+      location_id='from_network.id,
+      network_type: 'ZONE',
+      network_id='to_network.id,
+      protocol: '6',
+      source_port: '*',
+      destination_port: '3306',
+      dscp: '*' 
+    }
+  - {
+      action: 'FORWARD',
+      description: 'Allow HTTP connections between Web-NET VMs',
+      ether_type: '0x0800',
+      location_type: 'SUBNET',
+      location_id='network.id,
+      network_type: 'SUBNET',
+      network_id='network.id,
+      protocol: '6',
+      source_port: '*',
+      destination_port: '80',
+      dscp: '*'
+    }

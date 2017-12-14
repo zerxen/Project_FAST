@@ -9,6 +9,8 @@ from nuage.nuage_show import nuage_show
 from nuage.nuage_create import nuage_create
 from nuage.nuage_delete import nuage_delete
 from nuage.nuage_assign import nuage_assign
+from nuage.nuage_acl_load import nuage_load_acl_yaml
+from nuage.vspk_cli import nuage_vspk_cli
 from fortinet.fortinet_show import fortinet_show
 from vmware.vmware_show import vmware_show
 from vmware.vmware_create import vmware_create
@@ -17,6 +19,7 @@ from vmware.vmware_load_json import vmware_load_json
 from ixchariot.ixchariot_experiments import ixchariot_experiments
 from ixchariot.ixchariot_load_json import ixchariot_load_json
 from ixchariot.ixchariot_run import ixchariot_run
+
 
 
 def nuage_load(args):
@@ -76,7 +79,7 @@ if __name__ == "__main__":
     parsers_vmware_load = subparsers_vmware.add_parser('load')
     
     # VMSARE LOAD
-    parsers_vmware_load.add_argument('INFILE', nargs='?', type=argparse.FileType('r'),help='File in JSON format that contains vmware vms definition',default=sys.stdin)
+    parsers_vmware_load.add_argument('INFILE', nargs='+', type=argparse.FileType('r'),help='File in JSON format that contains vmware vms definition',default=sys.stdin)
     parsers_vmware_load.set_defaults(func=vmware_load_json)    
     
     # VMWARE SHOW PARAMETERS
@@ -130,11 +133,23 @@ if __name__ == "__main__":
     parsers_nuage_create = subparsers_nuage.add_parser('create')
     parsers_nuage_delete = subparsers_nuage.add_parser('delete')
     parsers_nuage_show = subparsers_nuage.add_parser('show')
-    parsers_nuage_assign = subparsers_nuage.add_parser('assign')    
+    parsers_nuage_assign = subparsers_nuage.add_parser('assign') 
+    parsers_nuage_acl_load = subparsers_nuage.add_parser('acl-load')
+    parsers_nuage_vspk_cli = subparsers_nuage.add_parser('vspk-cli')   
     
     # NUAGE LOAD
-    parsers_nuage_load.add_argument('INFILE', nargs='?', type=argparse.FileType('r'),help='File in JSON format that contains test definition',default=sys.stdin)
+    parsers_nuage_load.add_argument('INFILE', nargs=1, type=argparse.FileType('r'),help='File in JSON format that contains test definition',default=sys.stdin)
     parsers_nuage_load.set_defaults(func=nuage_load)
+    
+    # NUAGE CLI
+    parsers_nuage_vspk_cli.set_defaults(func=nuage_vspk_cli)
+    
+    # NUAGE acl LOAD
+    parsers_nuage_acl_load.add_argument('--entname', nargs=1, help='Specific enterprise name this is related to (e.g. if searching for user inside enterprise you use entnema for enterprise and --filter for user filtering)', required=True)
+    parsers_nuage_acl_load.add_argument('--domname', nargs=1, help='Specific domain name this acl load is related to', required=True)    
+    #parsers_nuage_acl_load.add_argument('INFILE', nargs=1, type=argparse.FileType('r'),help='ACL definition file in YAML format',default=sys.stdin)
+    parsers_nuage_acl_load.add_argument('--acl-yaml', '--acl', dest='YAML_FILE',  type=file, required=True, metavar='YAML_FILE', help='ACL definition file in YAML format')
+    parsers_nuage_acl_load.set_defaults(func=nuage_load_acl_yaml)    
     
     #NUAGE SHOW
     parsers_nuage_show.add_argument('OBJECT',choices=['enterprises', 'domains', 'zones', 'subnets','users','groups','permissions','acls','dhcp-options','gateways'],help='Select what type of Nuage objects you would like listed')

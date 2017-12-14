@@ -19,6 +19,92 @@ class nuage_vspk_wrapper():
         self.nc.start()
         
     '''
+    INTERACTIVE DEBUG
+    '''
+    def debug_cli(self):
+        print("=============================================================================================================") 
+        print("== You are connected to nuage, interact with \"self\" (API Wrapper) or \"self.nc\" (vspk object) as needed ==")
+        print("=============================================================================================================") 
+        import pdb
+        pdb.set_trace()
+    
+    '''
+    Network Macros
+    '''
+    def create_network_macro(self,entname,macroname,macroaddress,macromask):
+        enterprise = self.get_enterprise_find_name(entname)
+        if enterprise is None:
+            print("Wrong enterprise provided")
+            return 1
+        try:
+            macro = vsdk.NUEnterpriseNetwork(name=macroname,address=macroaddress,netmask=macromask)
+            enterprise.create_child(macro)     
+            
+            return 0
+        except Exception, e:
+            print('Caught exception: %s' % str(e))
+            return 1 
+        
+    def create_empty_network_macro_group(self,entname,macrogroupname):
+        enterprise = self.get_enterprise_find_name(entname)
+        if enterprise is None:
+            print("Wrong enterprise provided")
+            return 1
+        try:
+            macrogroup = vsdk.NUNetworkMacroGroup(name=macrogroupname)
+            enterprise.create_child(macrogroup)          
+            
+            return 0
+        except Exception, e:
+            print('Caught exception: %s' % str(e))
+            return 1 
+        
+    def get_macro_group_by_name(self,entname,macrogroupname):
+        enterprise = self.get_enterprise_find_name(entname)
+        if enterprise is None:
+            print("Wrong enterprise provided")
+            return None
+        
+        filter = 'name == "' + macrogroupname + '"';       
+        return enterprise.network_macro_groups.get_first(filter)
+    
+    def get_macro_by_name(self,entname,macroname):
+        enterprise = self.get_enterprise_find_name(entname)
+        if enterprise is None:
+            print("Wrong enterprise provided")
+            return None
+        
+        filter = 'name == "' + macroname + '"';       
+        return enterprise.enterprise_networks.get_first(filter)        
+               
+        
+    def add_macro_to_network_macro_group(self,entname,macrogroupname,macroname):
+        print("add_macro_to_network_macro_group" + macrogroupname +" " +  macroname)
+        
+        macro_group = self.get_macro_group_by_name(entname, macrogroupname)
+        if macro_group is None:
+            print("Wrong macro_group name provided")
+            return 1
+        
+        macro = self.get_macro_by_name(entname, macroname)
+        if macro is None:
+            print("Wrong macro name provided")
+            return 1        
+        
+        import pdb
+        pdb.set_trace()            
+        
+        try:
+            macro_group.create_child(macro) 
+            import pdb
+            pdb.set_trace()         
+            return 0
+        except Exception, e:
+            print('Caught exception: %s' % str(e))
+            return 1                           
+        
+        
+    '''
     Users
     '''
     def get_users_all_enterprises(self):
@@ -27,6 +113,8 @@ class nuage_vspk_wrapper():
         for ent in enterprises:
             users.append(ent.users.get())  
         return users
+    
+ 
              
     def get_users_of_one_enterprise(self,filter_name):
         enterprise = self.get_enterprise_find_name(filter_name)
@@ -1003,42 +1091,16 @@ class nuage_vspk_wrapper():
             print("Failed to get specified domain")
             return 1        
         
-        try:                                                   
-            # Creating the job to begin the policy changes
-            job = vsdk.NUJob(command='BEGIN_POLICY_CHANGES')
-            domain.create_child(job)
-            
-            import pdb
-            pdb.set_trace()
-            
-                       
-            # wait for the job to finish
-            # can be done with a while loop
-             
-            # Creating a new Ingress ACL
-            ingressacl = vsdk.NUIngressACLTemplate(
-                name='Middle Ingress ACL',
-                priority_type='NONE', # Possible values: TOP, NONE, BOTTOM (domain only accepts NONE)
-                priority=100,
-                default_allow_non_ip=True,
-                default_allow_ip=True,
-                allow_l2_address_spoof=True,
-                active=True
-                )
-            domain.create_child(ingressacl) 
-            
-            egressacl = vsdk.NUEgressACLTemplate(
-                name='Middle Egress ACL',
-                priority_type='NONE', # Possible values: TOP, NONE, BOTTOM (domain only accepts NONE)
-                priority=100,
-                default_allow_non_ip=True,
-                default_allow_ip=True,
-                active=True
-                )
-            domain.create_child(egressacl)         
-            
-            job = vsdk.NUJob(command='APPLY_POLICY_CHANGES')
-            domain.create_child(job)
+        try:                                                             
+            ingress =  domain.ingress_acl_templates.get_first()
+            while ingress is not None:              
+                ingress.delete()
+                ingress =  domain.ingress_acl_templates.get_first()                
+                
+            egress =  domain.egress_acl_templates.get_first()
+            while egress is not None:              
+                egress.delete()
+                egress =  domain.egress_acl_templates.get_first()       
             
             return 0
         except Exception, e:
