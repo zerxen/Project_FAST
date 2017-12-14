@@ -48,21 +48,40 @@ class nuage_vspk_wrapper():
                 return user
             
         return None    
-            
     
-    def print_users_of_enterprise(self,entname):
+    def find_user_in_enterprise(self,entname,filter):
         if entname is None or entname == '':
             print("Invalid enterprise filter")
-            return 
+            return 1
         
         enterprise = self.get_enterprise_find_name(entname)
         if enterprise is None:
             print("Failed to get enterprise")
-            return  
+            return 1 
         
         print("--- USERS of " + enterprise.name + " ---")
         for user in enterprise.users.get():
-            print("USER ID: " + user.user_name)      
+            print("USER ID: " + user.user_name)
+            if user.user_name == filter:
+                return 0
+            
+        return 1                 
+    
+    def print_users_of_enterprise(self,entname):
+        if entname is None or entname == '':
+            print("Invalid enterprise filter")
+            return 1
+        
+        enterprise = self.get_enterprise_find_name(entname)
+        if enterprise is None:
+            print("Failed to get enterprise")
+            return 1 
+        
+        print("--- USERS of " + enterprise.name + " ---")
+        for user in enterprise.users.get():
+            print("USER ID: " + user.user_name)
+            
+        return 0      
         
     def print_users_of_all_enterprises(self):
         enterprises = self.get_enterprises()
@@ -72,28 +91,39 @@ class nuage_vspk_wrapper():
         
         for enterprise in enterprises:
             self.print_users_of_enterprise(enterprise.name)
+            
+        return 0
     
     def create_user(self,entname,username,password,firstname,lastname,email):
         enterprise = self.get_enterprise_find_name(entname)
         if enterprise is None:
             print("Failed to get enterprise")
-            return  
+            return 1 
         
-        user = vsdk.NUUser(user_name=username,password=password,first_name=firstname,last_name=lastname,email=email) 
-        enterprise.create_child(user) 
+        try:
+            user = vsdk.NUUser(user_name=username,password=password,first_name=firstname,last_name=lastname,email=email) 
+            enterprise.create_child(user)
+            return 0 
+        except Exception, e:
+            print('Caught exception: %s' % str(e))
+            return 1          
         
     def delete_user(self,entname,username):
         enterprise = self.get_enterprise_find_name(entname)
         if enterprise is None:
             print("Failed to get enterprise")
-            return  
+            return 1 
         
         user = self.get_user_by_name_from_enterprise(entname, username)
         if user is None:
             print("User not found")
-            return   
-        
-        user.delete()
+            return 1  
+        try:
+            user.delete()
+            return 0
+        except Exception, e:
+            print('Caught exception: %s' % str(e))
+            return 1             
              
     '''
     Groups
@@ -118,20 +148,41 @@ class nuage_vspk_wrapper():
                 return group
             
         return None              
-        
-    def print_groups_of_enterprise(self,entname):
+    
+    def find_group_in_enterprise(self,entname, filter):  
         if entname is None or entname == '':
             print("Invalid enterprise filter")
-            return 
+            return 1
         
         enterprise = self.get_enterprise_find_name(entname)
         if enterprise is None:
             print("Failed to get groups")
-            return  
+            return  1
         
         print("--- GROUPS of " + enterprise.name + " ---")
         for group in enterprise.groups.get():
             print("GROUP name: " + group.name)
+            if group.name == filter:
+                return 0
+            
+        return 1
+            
+                    
+    def print_groups_of_enterprise(self,entname):
+        if entname is None or entname == '':
+            print("Invalid enterprise filter")
+            return 1
+        
+        enterprise = self.get_enterprise_find_name(entname)
+        if enterprise is None:
+            print("Failed to get groups")
+            return  1
+        
+        print("--- GROUPS of " + enterprise.name + " ---")
+        for group in enterprise.groups.get():
+            print("GROUP name: " + group.name)
+            
+        return 0
                   
         
     def print_groups_of_all_enterprises(self):
@@ -147,24 +198,36 @@ class nuage_vspk_wrapper():
         enterprise = self.get_enterprise_find_name(entname)
         if enterprise is None:
             print("Failed to get enterprise")
-            return  
+            return 1 
         
-        group = vsdk.NUGroup(name=groupname) 
-        enterprise.create_child(group) 
+        try:
+            group = vsdk.NUGroup(name=groupname) 
+            enterprise.create_child(group)
+            print("Group created within " + entname + " with ID: " + group.id)
+            return 0
+        except Exception, e:
+            print('Caught exception: %s' % str(e))
+            return 1         
+        
+ 
         
     def delete_group(self,entname,groupname):
         enterprise = self.get_enterprise_find_name(entname)
         if enterprise is None:
             print("Failed to get enterprise")
-            return  
+            return 1 
         
         group = self.get_group_by_name_from_enterprise(entname, groupname)
         if group is None:
-            print("User not found")
-            return   
+            print("Group not found")
+            return 1   
         
-        group.delete()                
-      
+        try:
+            group.delete()  
+            return 0              
+        except Exception, e:
+            print('Caught exception: %s' % str(e))
+            return 1            
                 
 
     '''
@@ -174,16 +237,17 @@ class nuage_vspk_wrapper():
         return self.nc.user.enterprises.get()
     
     def print_enterprises(self,filter_name):
+        print("print_enterprises")
         if filter_name == '':
             enterprises = self.get_enterprises()
             if enterprises is None:
                 print("Failed to get any Enterprises")
-                return                
+                return 1               
         else:
             ent = self.get_enterprise_find_name(filter_name)
             if ent is None:
                 print("Failed to find Enterprise using filter \"" + filter_name + "\"")
-                return
+                return 1
             else:
                 enterprises = [ent]
 
@@ -192,6 +256,11 @@ class nuage_vspk_wrapper():
             print("ENTERPRISE: " + ent.name)
             print("ID: " + ent.id)
             print("")
+            
+        if ent.name == filter_name:
+            return 0
+        else:
+            return 1
         
     def get_enterprise_find_name(self,entname):
         filter = 'name == "' + entname + '"';
@@ -245,7 +314,7 @@ class nuage_vspk_wrapper():
         enterprise = self.nc.user.enterprises.get_first(filter)
         if enterprise is None:
             print("Failed to find parent enterprise")
-            return
+            return None
         filter = 'name == "' + domname + '"';
         return enterprise.domains.get_first(filter)        
     
@@ -253,13 +322,44 @@ class nuage_vspk_wrapper():
         domains = self.get_domains()
         if domains is  None:
             print("Failed to get any Domains")
+            return 1
         else:
             print("--- DOMAINS ---")
             for dom in domains:
                 print("DOMAIN: " + dom.name)
                 print("ID: " + dom.id)
-                print("")        
-        
+                print("")    
+        return 0
+                
+    def print_domains_for_enterprise(self,entname): 
+        enterprise = self.get_enterprise_find_name(entname)
+        if enterprise is None:
+            print("Failed to find Enterprise")
+            return 1
+        domains = self.get_domains_for_enterprise_object(enterprise)
+        if domains is  None:
+            print("Failed to get any Domains")
+            return 1
+        else:
+            print("--- DOMAINS ---")
+            for dom in domains:
+                print("DOMAIN: " + dom.name)
+                print("ID: " + dom.id)
+                print("")                        
+        return 0
+    
+    def print_domain_for_enterprise(self,entname,domname):     
+        domain = self.get_domain_find_name(entname,domname)
+        if domain is  None:
+            print("Failed to get Domain")
+            return 1
+        else:
+            print("DOMAIN: " + domain.name)
+            print("ID: " + domain.id)
+            print("")                        
+        return 0    
+
+    
     def getDomainsForEnterprise(self,entname):
         
         enterprise = self.getenterprise_find_name(entname)
@@ -564,19 +664,24 @@ class nuage_vspk_wrapper():
              
         # permission_object = vsdk.NUPermission(permitted_action=permission,permitted_entity_id=group.id)
         
-        print("")
-        print("Validating permission object")
-        permission_object = vsdk.NUPermission()
-        permission_object.permitted_entity_id = group.id
-        permission_object.permitted_action = 'DEPLOY'
-        
-        pprint(permission_object)
-        print("permitted_entiti_id: " + permission_object.permitted_entity_id)
-        print("permitted_action: " + permission_object.permitted_action)
-        
-        domain.create_child(permission_object)
-        
-        print("permission.id: " + permission_object.id)
+        try: 
+            print("")
+            print("Validating permission object")
+            permission_object = vsdk.NUPermission()
+            permission_object.permitted_entity_id = group.id
+            permission_object.permitted_action = 'DEPLOY'
+            
+            pprint(permission_object)
+            print("permitted_entiti_id: " + permission_object.permitted_entity_id)
+            print("permitted_action: " + permission_object.permitted_action)
+            
+            domain.create_child(permission_object)
+            
+            print("permission.id: " + permission_object.id)
+            return 0
+        except Exception, e:
+            print('Caught exception: %s' % str(e))
+            return 1         
 
         
     def assign_permission_group_to_zone(self,entname,groupname,domname,zonename,permission):
@@ -613,11 +718,16 @@ class nuage_vspk_wrapper():
             return 1
         if zone is None:
             print("No zone found using the filter provided")
-            return 1        
-        
-        # There is no group.id ?! how to get permitted entinty ID ?         
-        permission_object = vsdk.NUPermission(permitted_action=permission,permitted_entity_id=group.id)
-        zone.create_child(permission_object)                                      
+            return 1  
+              
+        try:
+            # There is no group.id ?! how to get permitted entinty ID ?         
+            permission_object = vsdk.NUPermission(permitted_action=permission,permitted_entity_id=group.id)
+            zone.create_child(permission_object) 
+            return 0 
+        except Exception, e:
+            print('Caught exception: %s' % str(e))
+            return 1                                                
     
     '''
     VMs
@@ -760,13 +870,18 @@ class nuage_vspk_wrapper():
             print("No group found using the filter provided")
             return 1
         user = self.get_user_by_name_from_enterprise(entname, username)
-        if enterprise is None:
+        if user is None:
             print("No user found using the filter provided")
             return 1
         
-        users = group.users.get()
-        users.append(user)
-        group.assign(users,vsdk.NUUser)
+        try:
+            users = group.users.get()
+            users.append(user)
+            group.assign(users,vsdk.NUUser)
+            return 0
+        except Exception, e:
+            print('Caught exception: %s' % str(e))
+            return 1         
         
     '''
     Access-lists
@@ -840,40 +955,95 @@ class nuage_vspk_wrapper():
         domain = self.get_domain_find_name(entname, domname)
         if domain is None:
             print("Failed to get specified domain")
-            return        
-                                                            
-        # Creating the job to begin the policy changes
-        job = vsdk.NUJob(command='BEGIN_POLICY_CHANGES')
-        domain.create_child(job)
+            return 1        
         
-                   
-        # wait for the job to finish
-        # can be done with a while loop
-         
-        # Creating a new Ingress ACL
-        ingressacl = vsdk.NUIngressACLTemplate(
-            name='Middle Ingress ACL',
-            priority_type='NONE', # Possible values: TOP, NONE, BOTTOM (domain only accepts NONE)
-            priority=100,
-            default_allow_non_ip=True,
-            default_allow_ip=True,
-            allow_l2_address_spoof=True,
-            active=True
-            )
-        domain.create_child(ingressacl) 
+        try:                                                   
+            # Creating the job to begin the policy changes
+            job = vsdk.NUJob(command='BEGIN_POLICY_CHANGES')
+            domain.create_child(job)
+            
+                       
+            # wait for the job to finish
+            # can be done with a while loop
+             
+            # Creating a new Ingress ACL
+            ingressacl = vsdk.NUIngressACLTemplate(
+                name='Middle Ingress ACL',
+                priority_type='NONE', # Possible values: TOP, NONE, BOTTOM (domain only accepts NONE)
+                priority=100,
+                default_allow_non_ip=True,
+                default_allow_ip=True,
+                allow_l2_address_spoof=True,
+                active=True
+                )
+            domain.create_child(ingressacl) 
+            
+            egressacl = vsdk.NUEgressACLTemplate(
+                name='Middle Egress ACL',
+                priority_type='NONE', # Possible values: TOP, NONE, BOTTOM (domain only accepts NONE)
+                priority=100,
+                default_allow_non_ip=True,
+                default_allow_ip=True,
+                active=True
+                )
+            domain.create_child(egressacl)         
+            
+            job = vsdk.NUJob(command='APPLY_POLICY_CHANGES')
+            domain.create_child(job)
+            
+            return 0
+        except Exception, e:
+            print('Caught exception: %s' % str(e))
+            return 1  
         
-        egressacl = vsdk.NUEgressACLTemplate(
-            name='Middle Egress ACL',
-            priority_type='NONE', # Possible values: TOP, NONE, BOTTOM (domain only accepts NONE)
-            priority=100,
-            default_allow_non_ip=True,
-            default_allow_ip=True,
-            active=True
-            )
-        domain.create_child(egressacl)         
         
-        job = vsdk.NUJob(command='APPLY_POLICY_CHANGES')
-        domain.create_child(job)    
+    def delete_acl(self,entname,domname):
+        domain = self.get_domain_find_name(entname, domname)
+        if domain is None:
+            print("Failed to get specified domain")
+            return 1        
+        
+        try:                                                   
+            # Creating the job to begin the policy changes
+            job = vsdk.NUJob(command='BEGIN_POLICY_CHANGES')
+            domain.create_child(job)
+            
+            import pdb
+            pdb.set_trace()
+            
+                       
+            # wait for the job to finish
+            # can be done with a while loop
+             
+            # Creating a new Ingress ACL
+            ingressacl = vsdk.NUIngressACLTemplate(
+                name='Middle Ingress ACL',
+                priority_type='NONE', # Possible values: TOP, NONE, BOTTOM (domain only accepts NONE)
+                priority=100,
+                default_allow_non_ip=True,
+                default_allow_ip=True,
+                allow_l2_address_spoof=True,
+                active=True
+                )
+            domain.create_child(ingressacl) 
+            
+            egressacl = vsdk.NUEgressACLTemplate(
+                name='Middle Egress ACL',
+                priority_type='NONE', # Possible values: TOP, NONE, BOTTOM (domain only accepts NONE)
+                priority=100,
+                default_allow_non_ip=True,
+                default_allow_ip=True,
+                active=True
+                )
+            domain.create_child(egressacl)         
+            
+            job = vsdk.NUJob(command='APPLY_POLICY_CHANGES')
+            domain.create_child(job)
+            
+            return 0
+        except Exception, e:
+            print('Caught exception: %s' % str(e))
+            return 1                     
         
     '''
     GATEWAYS
@@ -1090,7 +1260,8 @@ class nuage_vspk_wrapper():
         hex_octets = array.array('B', hex_data)      
                       
     def dhcp_options_parser(self,dhcp_options_list):
-        if dhcp_options_list is not None:
+        if dhcp_options_list is not None and len(dhcp_options_list) > 0:
+            print("dhcp_options_list is not None and len(dhcp_options_list) > 0")
             for dhcp_option in dhcp_options_list:
                 print("    DHCP OPTION")
                 print("    type(hex): " + dhcp_option.type)
@@ -1155,31 +1326,48 @@ class nuage_vspk_wrapper():
                                 print("        Route(from hex): " + str(route_octets[3]) + "." + str(route_octets[2]) + "." + str(route_octets[1]) + "." + str(route_octets[0]) + "/" + str(prefix_mask) + " - " + str(route_nexthop_octets[3]) + "." + str(route_nexthop_octets[2]) + "." + str(route_nexthop_octets[1]) + "." + str(route_nexthop_octets[0]) )
 
                     for act_value in dhcp_option.actual_values: 
-                        print("        act. value:" + act_value)        
+                        print("        act. value:" + act_value)
+            return 0
+        else:
+            print(" No DHCP OPTIONS FOUND")
+            return 1        
         
-    def print_dhcp_options(self,entname,domname):
+    def print_dhcp_options_of_domain(self,entname,domname):
         print("DOMAIN: "+ entname)
         domain = self.get_domain_find_name(entname, domname)
         if domain is None:
             print("Failed to get specified domain")
-            return
+            return 1
         
         self.dhcp_options_parser(domain.dhcp_options.get())
                  
         zones = domain.zones.get()
         if zones is None:
             print("No zones in this domain")
-            return
+            return 1
         
         for zone in zones:
             print("Zone: "+ zone.name)
-            self.dhcp_options_parser(zone.dhcp_options.get())
+            #self.dhcp_options_parser(zone.dhcp_options.get())
             
             subnets = zone.subnets.get()
             if subnets is not None:
                 for subnet in subnets:
                     print("  Subnet: "+ subnet.name)
                     self.dhcp_options_parser(subnet.dhcp_options.get())
+                    
+        return 0
+                    
+    def print_dhcp_options_of_subnet(self,entname,domname,zonename,subnetname):
+        print("DOMAIN: "+ entname)    
+        
+        subnet = self.get_subnet_find_name(entname, domname, zonename, subnetname) 
+        if subnet is None:
+            print("Failed to get specified subnet, check address parameters")
+            return 1     
+        
+        print("  Subnet: "+ subnet.name)
+        return self.dhcp_options_parser(subnet.dhcp_options.get())                    
                     
     def hex_encode(self,route):
         return b"".join([b"%02x" % int(octet) for octet in route])
@@ -1235,9 +1423,12 @@ class nuage_vspk_wrapper():
             
         #new_actual_values = [dhcp_route_prefix,dhcp_route_nexthop]
         #new_option = vsdk.NUDHCPOption(actual_type=121,actual_values=new_actual_values)
-        
-        subnet.create_child(dhcpoption)
-        
+        try:
+            subnet.create_child(dhcpoption)
+            return 0
+        except Exception, e:
+            print('Caught exception: %s' % str(e))
+            return 1          
         
         
     def delete_dhcp_options(self,entname,domname,zonename,subnetname):

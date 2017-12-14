@@ -45,48 +45,48 @@ def nuage_assign(args):
 
         nuage = nuage_vspk_wrapper();
         nuage.connect()       
-        nuage.assign_user_to_group(args.entname[0],args.groupname[0],args.username[0])
+        return nuage.assign_user_to_group(args.entname[0],args.groupname[0],args.username[0])
         
     if args.OBJECT == 'permission-for-group-to-domain':
         print("assigning permission-for-group-to-domain starting ...")
         if args.entname is None or args.entname == '':
             print("You are assigning  without enterprise any name?! Specify name for object")
-            return
+            return 1
         if args.groupname is None or args.groupname == '':
             print("You are assigning without group any name?! Specify name for object")
-            return
+            return 1
         if args.domname is None or args.domname == '':
             print("You are assigning without domain name any name?! Specify name for object")
-            return   
+            return 1   
         if args.permission is None or args.permission == '':
             print("You are assigning without any permission type specified?! Specify permission type for assignment")
-            return         
+            return 1         
              
         nuage = nuage_vspk_wrapper();
         nuage.connect()  
-        nuage.assign_permission_group_to_domain(args.entname[0],args.groupname[0],args.domname[0],args.permission)     
+        return nuage.assign_permission_group_to_domain(args.entname[0],args.groupname[0],args.domname[0],args.permission)     
         
     if args.OBJECT == 'permission-for-group-to-zone':
         print("assigning permission-for-group-to-zone starting ...")
         if args.entname is None or args.entname == '':
             print("You are assigning  without enterprise any name?! Specify name for object")
-            return
+            return 1
         if args.groupname is None or args.groupname == '':
             print("You are assigning without group any name?! Specify name for object")
-            return
+            return 1
         if args.domname is None or args.domname == '':
             print("You are assigning without domain name any name?! Specify name for object")
-            return   
+            return 1  
         if args.zonename is None or args.zonename == '':
             print("You are assigning without zone name any name?! Specify name for object")
-            return          
+            return 1         
         if args.permission is None or args.permission == '':
             print("You are assigning without any permission type specified?! Specify permission type for assignment")
-            return         
+            return 1         
              
         nuage = nuage_vspk_wrapper();
         nuage.connect()  
-        nuage.assign_permission_group_to_zone(args.entname[0],args.groupname[0],args.domname[0],args.zonename[0],args.permission)             
+        return nuage.assign_permission_group_to_zone(args.entname[0],args.groupname[0],args.domname[0],args.zonename[0],args.permission)             
         
    
         

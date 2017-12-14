@@ -142,10 +142,12 @@ if __name__ == "__main__":
     parsers_nuage_show.add_argument('--tree', action='store_const', const=1, default=0, help='Works only with ENTERPRISES and shows a tree enterprise-domains-zones-subnets')
     parsers_nuage_show.add_argument('--entname', nargs=1, help='Specific enterprise name this is related to (e.g. if searching for user inside enterprise you use entnema for enterprise and --filter for user filtering)', default="")
     parsers_nuage_show.add_argument('--domname', nargs=1, help='Specific full name this is related to', default="")
+    parsers_nuage_show.add_argument('--subnetname', nargs=1, help='Specific full name of subnet this is related to', default="")
+    parsers_nuage_show.add_argument('--zonename', nargs=1, help='Specific full name of zone this is related to', default="")
     parsers_nuage_show.set_defaults(func=nuage_show)
     
     #NUAGE CREATE
-    parsers_nuage_create.add_argument('OBJECT',choices=['enterprise', 'domaintemplate', 'domain', 'zone', 'subnet','user','group','vtep','vlan-on-gateway','default-permit-acls','dhcp-option-121'],help='Select what type of Nuage objects you would like created')
+    parsers_nuage_create.add_argument('OBJECT',choices=['acl','enterprise', 'domaintemplate', 'domain', 'zone', 'subnet','user','group','vtep','vlan-on-gateway','default-permit-acls','dhcp-option-121'],help='Select what type of Nuage objects you would like created')
     parsers_nuage_create.add_argument('--entname', nargs=1, help='Specific full name for new enterprise or enterprise parent for other objects... depending on what are you creating', default="")
     parsers_nuage_create.add_argument('--domtempname', nargs=1, help='Specific full name for new domain template or domain template parent for other objects... depending on what are you creating', default="")
     parsers_nuage_create.add_argument('--domname', nargs=1, help='Specific full name for new domain or domain parent for other objects... depending on what are you creating', default="")
@@ -165,10 +167,10 @@ if __name__ == "__main__":
     parsers_nuage_create.add_argument('--gateway', nargs=1, help='Specific gateway', default="")
     parsers_nuage_create.add_argument('--gateway-interface', nargs=1, help='Specific interface on a gateway', default="")
     parsers_nuage_create.add_argument('--vlan-id', nargs=1, help='Specific vlan-id for gateway interface', default="")     
-    parsers_nuage_create.set_defaults(func=nuage_create)
+    parsers_nuage_create.set_defaults(func=nuage_create) 
     
     #NUAGE DELETE
-    parsers_nuage_delete.add_argument('OBJECT',choices=['enterprise', 'domaintemplate', 'domain', 'zone', 'subnet','user','group','vtep','dhcp-options'],help='Select what type of Nuage objects you would like DELETED')
+    parsers_nuage_delete.add_argument('OBJECT',choices=['acl','enterprise', 'domaintemplate', 'domain', 'zone', 'subnet','user','group','vtep','dhcp-options'],help='Select what type of Nuage objects you would like DELETED')
     parsers_nuage_delete.add_argument('--entname', nargs=1, help='Specific full name for new enterprise or enterprise parent for other objects... depending on what are you DELETING', default="")
     parsers_nuage_delete.add_argument('--domtempname', nargs=1, help='Specific full name for new domain template or domain template parent for other objects... depending on what are you DELETING', default="")
     parsers_nuage_delete.add_argument('--domname', nargs=1, help='Specific full name for new domain or domain parent for other objects... depending on what are you DELETING', default="")

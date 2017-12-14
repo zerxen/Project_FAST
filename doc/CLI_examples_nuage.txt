@@ -2,40 +2,40 @@
 ###################
 
 # USERS & GROUPS
-python2 project_fast.py nuage create enterprise --name AutomatedHelloWorld
-python2 project_fast.py nuage create user --entname AutomatedHelloWorld --password kreten123 --useremail none@none.sk --firstname Peter --lastname Havrila --username phavrila
-python2 project_fast.py nuage create group --groupname group_test --entname AutomatedHelloWorld
-python2 project_fast.py nuage assign user-to-group --entname AutomatedHelloWorld --groupname group_test --username phavrila
+project_fast.py nuage create enterprise --name AutomatedHelloWorld
+project_fast.py nuage create user --entname AutomatedHelloWorld --password kreten123 --useremail none@none.sk --firstname Peter --lastname Havrila --username phavrila
+project_fast.py nuage create group --groupname group_test --entname AutomatedHelloWorld
+project_fast.py nuage assign user-to-group --entname AutomatedHelloWorld --groupname group_test --username phavrila
 
 # Templates, domains, zones, subnets
-python2 project_fast.py nuage create domaintemplate --entname AutomatedHelloWorld --domtempname Template1
-python2 project_fast.py nuage create domain --entname AutomatedHelloWorld --domtempname Template1 --domname Instance1
-python2 project_fast.py nuage create zone --entname AutomatedHelloWorld --domtempname Template1 --domname Instance1 --zonename Private1
-python2 project_fast.py nuage create subnet --entname AutomatedHelloWorld --domtempname Template1 --domname Instance1 --zonename Private1 --subnetname subnet1 --subnetNetworkIP 1.1.1.0 --subnetNetworkMask 255.255.255.0
-python2 project_fast.py nuage create subnet --entname AutomatedHelloWorld --domtempname Template1 --domname Instance1 --zonename Private1 --subnetname subnet2 --subnetNetworkIP 2.2.2.0 --subnetNetworkMask 255.255.255.0
+ project_fast.py nuage create domaintemplate --entname AutomatedHelloWorld --domtempname Template1
+ project_fast.py nuage create domain --entname AutomatedHelloWorld --domtempname Template1 --domname Instance1
+ project_fast.py nuage create zone --entname AutomatedHelloWorld --domtempname Template1 --domname Instance1 --zonename Private1
+ project_fast.py nuage create subnet --entname AutomatedHelloWorld --domtempname Template1 --domname Instance1 --zonename Private1 --subnetname subnet1 --subnetNetworkIP 1.1.1.0 --subnetNetworkMask 255.255.255.0
+ project_fast.py nuage create subnet --entname AutomatedHelloWorld --domtempname Template1 --domname Instance1 --zonename Private1 --subnetname subnet2 --subnetNetworkIP 2.2.2.0 --subnetNetworkMask 255.255.255.0
 
-
-# PERMISSIONS to use domain/zone TODO, NOT WORKING YET CORRECTLY
-python2 project_fast.py nuage assign permission-for-group-to-domain --entname AutomatedHelloWorld --groupname group_test --permission DEPLOY --domname Instance1
-python2 project_fast.py nuage assign permission-for-group-to-zone --entname AutomatedHelloWorld --groupname group_test --permission USE --domname Instance1 --zonename Private1
-
+# PERMISSIONS to use domain/zone
+ project_fast.py nuage assign permission-for-group-to-domain --entname AutomatedHelloWorld --groupname group_test --permission DEPLOY --domname Instance1
+ project_fast.py nuage assign permission-for-group-to-domain --entname AutomatedHelloWorld --groupname group_test --permission READ --domname Instance1
+ project_fast.py nuage assign permission-for-group-to-zone --entname AutomatedHelloWorld --groupname group_test --permission USE --domname Instance1 --zonename Private1
 
 # ACLs (in this version only default allow ACL for whole domain is supported!!)
-python2 project_fast.py nuage show acls
-python2 project_fast.py nuage create default-permit-acls --entname HelloWorld2 --domname Instance2
+ project_fast.py nuage show acls --entname HelloWorld2 --domname Instance2
+ project_fast.py nuage create default-permit-acls --entname HelloWorld2 --domname Instance2
 
 # DHCP options:
-python2 project_fast.py nuage show dhcp-options --entname HelloWorld2 --domname Instance1
-python2 project_fast.py nuage create dhcp-option-121 --dhcp-route-prefix-mask 32 --dhcp-route-prefix "30.160.158.155" --dhcp-route-nexthop "29.203.248.1"  --entname HelloWorld2 --domname Instance1 --zonename private1 --subnetname subnet1 
+ project_fast.py nuage show dhcp-options --entname HelloWorld2 --domname Instance1
+ project_fast.py nuage show dhcp-options --entname HelloWorld2 --domname Instance1 --zonename Private1 --subnetname subnet1
+ project_fast.py nuage create dhcp-option-121 --dhcp-route-prefix-mask 32 --dhcp-route-prefix "30.160.158.155" --dhcp-route-nexthop "29.203.248.1"  --entname HelloWorld2 --domname Instance1 --zonename private1 --subnetname subnet1 
 
 # GATEWAYS / VTEPs
-python2 project_fast.py nuage show gateways
-python2 project_fast.py nuage create vlan-on-gateway --gateway 29.203.0.44 --gateway-interface "usplnACvpclab1001:::Ten-GigabitEthernet1/0/33" --vlan-id 8  
-python2 project_fast.py nuage assign enterprise-to-gateway-vlan --entname AutomatedHelloWorld --gateway 29.203.0.44 --gateway-interface "usplnACvpclab1001:::Ten-GigabitEthernet1/0/33" --vlan-id 8 
-python2 project_fast.py nuage create vtep --entname AutomatedHelloWorld --domname Instance2 --zonename private2 --subnetname subnet2 --gateway 29.203.0.44 --gateway-interface "usplnACvpclab1001:::Ten-GigabitEthernet1/0/33" --vlan-id 8 
+ project_fast.py nuage show gateways
+ project_fast.py nuage create vlan-on-gateway --gateway 29.203.0.44 --gateway-interface "usplnACvpclab1001:::Ten-GigabitEthernet1/0/33" --vlan-id 8  
+ project_fast.py nuage assign enterprise-to-gateway-vlan --entname AutomatedHelloWorld --gateway 29.203.0.44 --gateway-interface "usplnACvpclab1001:::Ten-GigabitEthernet1/0/33" --vlan-id 8 
+ project_fast.py nuage create vtep --entname AutomatedHelloWorld --domname Instance2 --zonename private2 --subnetname subnet2 --gateway 29.203.0.44 --gateway-interface "usplnACvpclab1001:::Ten-GigabitEthernet1/0/33" --vlan-id 8 
 
 # SHOW COMMANDS
-python2 project_fast.py nuage show enterprises --filter AutomatedHelloWorld --tree
+ project_fast.py nuage show enterprises --filter AutomatedHelloWorld --tree
 
     OUTPUTEXAMPLE:
     nuage show enterprises, starting ...
@@ -46,28 +46,29 @@ python2 project_fast.py nuage show enterprises --filter AutomatedHelloWorld --tr
                     +-SUBNET: subnet2 ID: c0eaac0a-10c6-4839-851f-0c0944e53461
                 
 # DELETION (recursive)
-python2 project_fast.py nuage delete enterprise --entname AutomatedHelloWorld --tree
+ project_fast.py nuage delete enterprise --entname AutomatedHelloWorld --tree
 
 # DELETION DHCP
-python2 project_fast.py nuage delete dhcp-options --entname HelloWorld1 --domname Instance1 --zonename private_zone --subnetname subnet1 
+ project_fast.py nuage delete dhcp-options --entname HelloWorld1 --domname Instance1 --zonename private_zone --subnetname subnet1 
 
 # DELETION (step by step)
-python2 project_fast.py nuage delete vtep --entname AutomatedHelloWorld --domname Instance2 --zonename private2 --subnetname subnet2 --vportname FAST_vbridge_2017_Mar_20_17_17_PM_00_vlan8
-python2 project_fast.py nuage delete subnet --entname AutomatedHelloWorld --domtempname Template1 --domname Instance1 --zonename Private1 --subnetname subnet1
-python2 project_fast.py nuage delete subnet --entname AutomatedHelloWorld --domtempname Template1 --domname Instance1 --zonename Private1 --subnetname subnet2
-python2 project_fast.py nuage delete zone --entname AutomatedHelloWorld --domtempname Template1 --domname Instance1 --zonename Private1
-python2 project_fast.py nuage delete domain --entname AutomatedHelloWorld --domtempname Template1 --domname Instance1
-python2 project_fast.py nuage delete domaintemplate --entname AutomatedHelloWorld --domtempname Template1
-python2 project_fast.py nuage delete user --username appuser2 --entname AutomatedHelloWorld
-python2 project_fast.py nuage delete group --groupname group_test --entname AutomatedHelloWorld
-python2 project_fast.py nuage delete enterprise --entname AutomatedHelloWorld
+ project_fast.py nuage delete acl --entname HelloWorld2 --domname Instance2
+ project_fast.py nuage delete vtep --entname AutomatedHelloWorld --domname Instance2 --zonename private2 --subnetname subnet2 --vportname FAST_vbridge_2017_Mar_20_17_17_PM_00_vlan8
+ project_fast.py nuage delete subnet --entname AutomatedHelloWorld --domtempname Template1 --domname Instance1 --zonename Private1 --subnetname subnet1
+ project_fast.py nuage delete subnet --entname AutomatedHelloWorld --domtempname Template1 --domname Instance1 --zonename Private1 --subnetname subnet2
+ project_fast.py nuage delete zone --entname AutomatedHelloWorld --domtempname Template1 --domname Instance1 --zonename Private1
+ project_fast.py nuage delete domain --entname AutomatedHelloWorld --domname Instance1
+ project_fast.py nuage delete domaintemplate --entname AutomatedHelloWorld --domtempname Template1
+ project_fast.py nuage delete user --username appuser2 --entname AutomatedHelloWorld
+ project_fast.py nuage delete group --groupname group_test --entname AutomatedHelloWorld
+ project_fast.py nuage delete enterprise --entname AutomatedHelloWorld
 
 # JSON WHOLE TOPOLOGY LOADING!!! #
 ##################################
-python2 project_fast.py nuage load doc\test_topology.json
+ project_fast.py nuage load doc\test_topology.json
 
 # And of course a complete delete in recursive also supported:
-python2 project_fast.py nuage delete enterprise --entname HelloWorld2 --tree
+ project_fast.py nuage delete enterprise --entname HelloWorld2 --tree
 
                 
                 
