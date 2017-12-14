@@ -89,19 +89,49 @@ class nuage_vspk_wrapper():
         macro = self.get_macro_by_name(entname, macroname)
         if macro is None:
             print("Wrong macro name provided")
-            return 1        
-        
-        import pdb
-        pdb.set_trace()            
+            return 1
+                
+        #import pdb
+        #pdb.set_trace()
         
         try:
-            macro_group.create_child(macro) 
-            import pdb
-            pdb.set_trace()         
+            current_macros = macro_group.enterprise_networks.get()
+            current_macros.append(macro)
+            macro_group.assign(current_macros,vsdk.NUEnterpriseNetwork)                   
             return 0
         except Exception, e:
             print('Caught exception: %s' % str(e))
-            return 1                           
+            return 1    
+        
+    def delete_network_macro_groups(self,entname):
+        enterprise = self.get_enterprise_find_name(entname)
+        if enterprise is None:
+            print("Wrong enterprise provided")
+            return 1
+        
+        macro_groups = enterprise.network_macro_groups.get()
+        try:
+            for macro in macro_groups:
+                macro.delete()
+            return 0
+        except Exception, e:
+            print('Caught exception: %s' % str(e))
+            return 1            
+    def delete_network_macros(self,entname):
+        enterprise = self.get_enterprise_find_name(entname)
+        if enterprise is None:
+            print("Wrong enterprise provided")
+            return 1
+        
+        macros = enterprise.enterprise_networks.get()
+        try:
+            for macro in macros:
+                macro.delete()  
+            return 0
+        except Exception, e:
+            print('Caught exception: %s' % str(e))
+            return 1
+            
         
         
     '''

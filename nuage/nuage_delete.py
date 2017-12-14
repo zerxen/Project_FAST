@@ -103,7 +103,25 @@ def nuage_delete(args):
         
         nuage = nuage_vspk_wrapper();
         nuage.connect()        
-        return nuage.delete_acl(args.entname[0],args.domname[0])        
+        return nuage.delete_acl(args.entname[0],args.domname[0])     
+
+    if args.OBJECT == 'network_macros':   
+        if args.entname is None or args.entname == '':
+            print("You are deleting without any parent enterprise name?! Specify name for object")
+            return 1     
+        
+        nuage = nuage_vspk_wrapper();
+        nuage.connect()        
+        return nuage.delete_network_macros(args.entname[0]) 
+    
+    if args.OBJECT == 'network_macro_groups':   
+        if args.entname is None or args.entname == '':
+            print("You are deleting without any parent enterprise name?! Specify name for object")
+            return 1     
+        
+        nuage = nuage_vspk_wrapper();
+        nuage.connect()        
+        return nuage.delete_network_macro_groups(args.entname[0])      
         
 
 

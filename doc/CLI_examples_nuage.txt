@@ -53,6 +53,8 @@ project_fast.py nuage assign user-to-group --entname AutomatedHelloWorld --group
 
 # DELETION (step by step)
  project_fast.py nuage delete acl --entname HelloWorld2 --domname Instance2
+ project_fast.py nuage delete network_macro_groups --entname AutomatedHelloWorld
+ project_fast.py nuage delete network_macros --entname AutomatedHelloWorld
  project_fast.py nuage delete vtep --entname AutomatedHelloWorld --domname Instance2 --zonename private2 --subnetname subnet2 --vportname FAST_vbridge_2017_Mar_20_17_17_PM_00_vlan8
  project_fast.py nuage delete subnet --entname AutomatedHelloWorld --domtempname Template1 --domname Instance1 --zonename Private1 --subnetname subnet1
  project_fast.py nuage delete subnet --entname AutomatedHelloWorld --domtempname Template1 --domname Instance1 --zonename Private1 --subnetname subnet2

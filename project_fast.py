@@ -185,7 +185,7 @@ if __name__ == "__main__":
     parsers_nuage_create.set_defaults(func=nuage_create) 
     
     #NUAGE DELETE
-    parsers_nuage_delete.add_argument('OBJECT',choices=['acl','enterprise', 'domaintemplate', 'domain', 'zone', 'subnet','user','group','vtep','dhcp-options'],help='Select what type of Nuage objects you would like DELETED')
+    parsers_nuage_delete.add_argument('OBJECT',choices=['network_macros','network_macro_groups','acl','enterprise', 'domaintemplate', 'domain', 'zone', 'subnet','user','group','vtep','dhcp-options'],help='Select what type of Nuage objects you would like DELETED')
     parsers_nuage_delete.add_argument('--entname', nargs=1, help='Specific full name for new enterprise or enterprise parent for other objects... depending on what are you DELETING', default="")
     parsers_nuage_delete.add_argument('--domtempname', nargs=1, help='Specific full name for new domain template or domain template parent for other objects... depending on what are you DELETING', default="")
     parsers_nuage_delete.add_argument('--domname', nargs=1, help='Specific full name for new domain or domain parent for other objects... depending on what are you DELETING', default="")
