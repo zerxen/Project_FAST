@@ -22,6 +22,7 @@ project_fast.py nuage assign user-to-group --entname AutomatedHelloWorld --group
 # ACLs (in this version only default allow ACL for whole domain is supported!!)
  project_fast.py nuage show acls --entname HelloWorld2 --domname Instance2
  project_fast.py nuage create default-permit-acls --entname HelloWorld2 --domname Instance2
+ project_fast.py nuage acl-load --entname HelloWorld2 --domname Instance2 --acl doc\yaml_input_examples\acl.yaml
 
 # DHCP options:
  project_fast.py nuage show dhcp-options --entname HelloWorld2 --domname Instance1

@@ -27,7 +27,9 @@ def nuage_load_acl_yaml(args):
     # CONNECT TO NUAGE
     nuage = nuage_vspk_wrapper();
     nuage.connect() 
-
+    
+    
+    
     # CREATING NETWORK MACROS
     for network_macro in data['network_macros']:
         error_code = nuage.create_network_macro(args.entname[0],network_macro['name'],network_macro['address'],network_macro['mask'])
@@ -48,5 +50,6 @@ def nuage_load_acl_yaml(args):
                 print("adding macro to group problem, quiting ...")
                 return 1            
                     
+    
+    return nuage.create_acls(args.entname[0], args.domname[0], data)
 
-    return 0

@@ -1114,6 +1114,169 @@ class nuage_vspk_wrapper():
             print('Caught exception: %s' % str(e))
             return 1  
         
+    def create_rule_objects(self,enterprise_object, domain_object,acl_rules):
+        
+        rules = []
+        index = 0;
+        
+        for acl_rule in acl_rules:
+            index=index+1;
+            print("===================")
+            print("ADDING RULE #" + str(index))
+            print("-------------------")
+            pprint(acl_rule)
+            
+            db_ingressacl_rule = vsdk.NUIngressACLEntryTemplate(
+                action=acl_rule['action'],
+                description=acl_rule['description'],
+                ether_type=acl_rule['ether_type'],
+                #location_type='ZONE',
+                #location_id=from_network.id,
+                #network_type='ZONE',
+                #network_id=to_network.id,
+                protocol=acl_rule['protocol'],
+                source_port=acl_rule['source_port'],
+                destination_port=acl_rule['destination_port'],
+                dscp=acl_rule['dscp']
+                )
+            
+            '''
+            RESOLVING SOURCE
+            '''
+            if 'location_type' in acl_rule and acl_rule['location_type'] == "ZONE":
+                filter = 'name == "' + acl_rule['location_id'] + '"';
+                from_network = domain_object.zones.get_first(filter)
+                if from_network is None:
+                    print("BAD location_id, HARD EXIT")
+                    quit(1)
+                db_ingressacl_rule.location_type = "ZONE"
+                db_ingressacl_rule.location_id = from_network.id
+                
+            elif acl_rule['location_type'] == "SUBNET":
+                filter = 'name == "' + acl_rule['location_id'] + '"';
+                from_network = domain_object.subnets.get_first(filter)
+                if from_network is None:
+                    print("BAD location_id, HARD EXIT")
+                    quit(1)
+                db_ingressacl_rule.location_type = "SUBNET"
+                db_ingressacl_rule.location_id = from_network.id                
+            else:
+                print("Considering SOURCE as ANY")
+            
+            '''
+            RESOLVING DESTINATION
+            '''
+            if 'network_type' in acl_rule and acl_rule['network_type'] == "ZONE":
+                filter = 'name == "' + acl_rule['network_id'] + '"';
+                from_network = domain_object.zones.get_first(filter)
+                if from_network is None:
+                    print("BAD network_id, HARD EXIT")
+                    quit(1)
+                db_ingressacl_rule.network_type = "ZONE"
+                db_ingressacl_rule.network_id = from_network.id
+                
+            elif acl_rule['network_type'] == "SUBNET":
+                filter = 'name == "' + acl_rule['network_id'] + '"';
+                from_network = domain_object.subnets.get_first(filter)
+                if from_network is None:
+                    print("BAD network_id, HARD EXIT")
+                    quit(1)
+                db_ingressacl_rule.network_type = "SUBNET"
+                db_ingressacl_rule.network_id = from_network.id
+                
+            elif acl_rule['network_type'] == "ENTERPRISE_NETWORK":
+                filter = 'name == "' + acl_rule['network_id'] + '"';
+                from_network = enterprise_object.enterprise_networks.get_first(filter)
+                if from_network is None:
+                    print("BAD network_id, HARD EXIT")
+                    quit(1)
+                db_ingressacl_rule.network_type = "ENTERPRISE_NETWORK"
+                db_ingressacl_rule.network_id = from_network.id 
+                               
+            elif acl_rule['network_type'] == "NETWORK_MACRO_GROUP":
+                filter = 'name == "' + acl_rule['network_id'] + '"';
+                from_network = enterprise_object.network_macro_groups.get_first(filter)
+                if from_network is None:
+                    print("BAD network_id, HARD EXIT")
+                    quit(1)
+                db_ingressacl_rule.network_type = "NETWORK_MACRO_GROUP"
+                db_ingressacl_rule.network_id = from_network.id
+                
+            else:
+                print("Considering DESTINATION as ANY")            
+            
+            rules.append(db_ingressacl_rule);           
+        
+        return rules           
+        
+    
+    def create_acls(self,entname,domname,acl_data):
+        domain = self.get_domain_find_name(entname, domname)
+        if domain is None:
+            print("Failed to get specified domain")
+            return 1  
+        
+        enterprise = self.get_enterprise_find_name(entname)
+        if enterprise is None:
+            print("Failed to get specified enterprise")
+            return 1  
+        
+        try:                                                   
+            # Creating the job to begin the policy changes
+            job = vsdk.NUJob(command='BEGIN_POLICY_CHANGES')
+            domain.create_child(job)
+            
+            if acl_data['ingress_rules'] is None:
+                print("INFO: NO INGRESS RULES IN YAML INPUT")
+            else: 
+                # Creating a new Ingress ACL
+                ingressacl = vsdk.NUIngressACLTemplate(
+                    name=acl_data['ingress_name'],
+                    priority_type=acl_data['ingress_priority_type'], # Possible values: TOP, NONE, BOTTOM (domain only accepts NONE)
+                    priority=int(acl_data['ingress_priority']),
+                    default_allow_non_ip=(acl_data['ingress_default_allow_non_ip'] == "True"),
+                    default_allow_ip=(acl_data['ingress_default_allow_ip'] == "True"),
+                    allow_l2_address_spoof=(acl_data['ingress_allow_l2_address_spoof'] == "True"),
+                    active=(acl_data['ingress_active'] == "True")
+                    )
+                domain.create_child(ingressacl) 
+                
+                
+                '''
+                Now lets try creating ACL rules themselves
+                '''
+                
+                rules = self.create_rule_objects(enterprise, domain, acl_data['ingress_rules'])
+                for rule in rules:
+                    ingressacl.create_child(rule)
+                
+                '''
+         
+                '''
+            
+            if 'egress_rules' not in acl_data:
+                print("INFO: NO EGRESS RULES IN YAML INPUT")
+            else:                
+                egressacl = vsdk.NUEgressACLTemplate( 
+                    name=acl_data['egress_name'],
+                    priority_type=acl_data['egress_priority_type'], # Possible values: TOP, NONE, BOTTOM (domain only accepts NONE)
+                    priority=int(acl_data['egress_priority']),
+                    default_allow_non_ip=(acl_data['egress_default_allow_non_ip'] == "True"),
+                    default_allow_ip=(acl_data['egress_default_allow_ip'] == "True"),
+                    active=(acl_data['egress_active'] == "True")
+                    )
+                domain.create_child(egressacl)         
+            
+            
+            # END EDITING SESSION
+            job = vsdk.NUJob(command='APPLY_POLICY_CHANGES')
+            domain.create_child(job)
+            
+            return 0
+        except Exception, e:
+            print('Caught exception: %s' % str(e))
+            return 1
+        
         
     def delete_acl(self,entname,domname):
         domain = self.get_domain_find_name(entname, domname)

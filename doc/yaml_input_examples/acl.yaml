@@ -17,8 +17,14 @@ network_macro_groups:
     - name: "Net15"
     - name: "Net16"     
 
-
-ingress_rules:
+ingress_name: 'Examle Ingress ACL'
+ingress_priority_type: 'NONE' # Possible values: TOP, NONE, BOTTOM (domain only accepts NONE)
+ingress_priority: 100
+ingress_default_allow_non_ip: 'False'
+ingress_default_allow_ip: 'False'
+ingress_allow_l2_address_spoof: 'False'
+ingress_active: 'True'
+ingress_rules: 
   - {
       action: 'FORWARD',
       description: "Permit ANY example",
@@ -27,7 +33,7 @@ ingress_rules:
       location_type: ANY,
       network_type: ANY,
       priority: 1001,
-      protocol: 17,
+      protocol: '17',
       reflexive: True,
       source_port: '*',
       destination_port: '*',
@@ -38,9 +44,9 @@ ingress_rules:
       description: 'Allow MySQL DB connections from Web Tier',
       ether_type: '0x0800',
       location_type: 'ZONE',
-      location_id='from_network.id,
+      location_id: 'Customer_Managed1',
       network_type: 'ZONE',
-      network_id='to_network.id,
+      network_id: 'DXC_Managed1',
       protocol: '6',
       source_port: '*',
       destination_port: '3306',
@@ -51,11 +57,31 @@ ingress_rules:
       description: 'Allow HTTP connections between Web-NET VMs',
       ether_type: '0x0800',
       location_type: 'SUBNET',
-      location_id='network.id,
+      location_id: 'AutomatedHelloWorld_DXC_Subnet2',
       network_type: 'SUBNET',
-      network_id='network.id,
+      network_id: 'AutomatedHelloWorld_DXC_Subnet1',
       protocol: '6',
       source_port: '*',
       destination_port: '80',
       dscp: '*'
     }
+  - {
+      action: 'FORWARD',
+      description: 'Permit ANY towards ',
+      ether_type: '0x0800',
+      location_type: 'ANY',
+      network_type: 'NETWORK_MACRO_GROUP',
+      network_id: 'SSNManagement',
+      protocol: '6',
+      source_port: '*',
+      destination_port: '80',
+      dscp: '*'
+    }    
+    
+    
+egress_name: 'Middle Egress ACL'
+egress_priority_type: 'NONE' # Possible values: TOP, NONE, BOTTOM (domain only accepts NONE)
+egress_priority: 100
+egress_default_allow_non_ip: 'True'
+egress_default_allow_ip: 'True'
+egress_active: 'True'    
